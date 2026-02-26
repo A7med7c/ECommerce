@@ -1,4 +1,8 @@
 using EComerce.DAL.Data.Contexts;
+using ECommerce.BLL.Services;
+using ECommerce.BLL.Services.Interfaces;
+using ECommerce.DAL.Repositories.Classes;
+using ECommerce.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.PL
@@ -23,6 +27,9 @@ namespace ECommerce.PL
                 //options.UseSqlServer("COnnectionString");
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
             });
+
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
             #endregion
 
 

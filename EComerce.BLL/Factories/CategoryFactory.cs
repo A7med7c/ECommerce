@@ -25,7 +25,7 @@ namespace ECommerce.BLL.Factories
                 ParentCategoryId = category.ParentCategoryId,
                 CreatedBy = category.CreatedBy,
                 IsDeleted = category.IsDeleted,
-                modifiedBy = category.modifiedBy,
+                modifiedBy = category.ModifiedBy,
                 CreatedOn = category.CreatedOn.HasValue ? DateOnly.FromDateTime(category.CreatedOn.Value) : default,
                 ModifiedOn = category.ModifiedOn.HasValue ? DateOnly.FromDateTime(category.ModifiedOn.Value) : default,
             };

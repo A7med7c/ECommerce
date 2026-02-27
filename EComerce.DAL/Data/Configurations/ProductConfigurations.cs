@@ -1,0 +1,51 @@
+using ECommerce.DAL.Entities;
+
+namespace EComerce.DAL.Data.Configurations
+{
+    internal class ProductConfigurations
+    {
+        public void Configure(EntityTypeBuilder<Product> builder)
+        {
+            // PK
+            builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).UseIdentityColumn(1, 1);
+
+            // Properties
+            builder.Property(p => p.Name)
+                   .HasColumnType("varchar(200)")
+                   .IsRequired();
+
+            builder.HasIndex(p => p.Name).IsUnique();
+
+            builder.Property(p => p.SKU)
+                   .HasColumnType("varchar(50)")
+                   .IsRequired();
+
+            builder.HasIndex(p => p.SKU).IsUnique();
+
+            builder.Property(p => p.Price)
+                   .HasColumnType("decimal(18,2)");
+
+            builder.Property(p => p.StockQuantity)
+                   .HasDefaultValue(0);
+
+            builder.Property(p => p.IsActive)
+                   .HasDefaultValue(true);
+
+            // Map BaseEntity.CreatedOn → DB column "CreatedAt" for Product
+            builder.Property(p => p.CreatedOn)
+                   .HasColumnName("CreatedAt")
+                   .HasDefaultValueSql("GETDATE()");
+
+            // Relationship: Category 1→∞ Product
+            builder.HasOne(p => p.Category)
+                   .WithMany(c => c.Products)
+                   .HasForeignKey(p => p.CategoryId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            // Audit columns
+            builder.Property(p => p.ModifiedOn).HasDefaultValueSql("GETDATE()");
+            builder.Property(p => p.IsDeleted).HasDefaultValue(false);
+        }
+    }
+}

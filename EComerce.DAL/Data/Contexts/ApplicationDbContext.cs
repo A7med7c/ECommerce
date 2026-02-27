@@ -24,7 +24,11 @@ namespace EComerce.DAL.Data.Contexts
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
         }
+        
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Address> Addresses { get; set; }
     }
 }

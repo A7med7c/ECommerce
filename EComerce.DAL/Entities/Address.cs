@@ -10,7 +10,7 @@ namespace ECommerce.DAL.Entities
         public string Zip { get; set; } = null!;
         public bool IsDefault { get; set; }
         public string UserId { get; set; } = null!;//fk
-        public ApplicationUser ApplicationUser { get; set; }
-        public ICollection<Order>  Orders { get; set; } = new HashSet<Order>();
+        public ApplicationUser ApplicationUser { get; set; } = null!;
+        public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }

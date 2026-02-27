@@ -13,7 +13,12 @@ namespace ECommerce.DAL.Repositories.Classes
         //[GetAllCategories]
         public IEnumerable<Category> GetCategories(bool tracking = false) => _dbContext.Categories.ToList();
         //[GatDepartmentByID]
-        public Category? GetById(int id) => _dbContext.Categories.Find(id); //must take id and if the value exists in the cash will get value from it.
+        public Category? GetById(int id)
+        {
+            return _dbContext.Categories
+                .Include(c => c.ParentCategory)
+                .FirstOrDefault(c => c.Id == id);
+        }// find -> must take id and if the value exists in the cash will get value from it.
 
         //[Add]
         public int Add(Category category)

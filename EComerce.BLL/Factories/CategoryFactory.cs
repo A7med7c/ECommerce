@@ -7,14 +7,14 @@ namespace ECommerce.BLL.Factories
     {
         public static CategoriesVM ToCategoriesVM(this Category category)
         {
-            return new CategoriesVM() 
+            return new CategoriesVM()
             {
                 CategoryId = category.Id,
                 Name = category.Name,
                 ParentCategoryId = category.ParentCategoryId,
                 CreatedOn = category.CreatedOn.HasValue ? DateOnly.FromDateTime(category.CreatedOn.Value) : default
             };
-        } 
+        }
 
         public static CategoryDetailsVM ToCategoryDetailsVM(this Category category)
         {
@@ -23,9 +23,12 @@ namespace ECommerce.BLL.Factories
                 Id = category.Id,
                 Name = category.Name,
                 ParentCategoryId = category.ParentCategoryId,
+                ParentCategoryName = category.ParentCategory != null
+                                ? category.ParentCategory.Name
+                                : null,
                 CreatedBy = category.CreatedBy,
                 IsDeleted = category.IsDeleted,
-                modifiedBy = category.ModifiedBy,
+                ModifiedBy = category.ModifiedBy,
                 CreatedOn = category.CreatedOn.HasValue ? DateOnly.FromDateTime(category.CreatedOn.Value) : default,
                 ModifiedOn = category.ModifiedOn.HasValue ? DateOnly.FromDateTime(category.ModifiedOn.Value) : default,
             };
@@ -45,7 +48,15 @@ namespace ECommerce.BLL.Factories
                 Id = updateCategoryVM.CategoryId,
                 Name = updateCategoryVM.Name,
                 ParentCategoryId = updateCategoryVM.ParentCategoryId,
-                CreatedOn = updateCategoryVM.CreatedOn.ToDateTime(new TimeOnly())
+            };
+        }
+        public static UpdateCategoryVM ToUpdateCategoryVM(this Category category)
+        {
+            return new UpdateCategoryVM()
+            {
+                CategoryId = category.Id,
+                Name = category.Name,
+                ParentCategoryId = category.ParentCategoryId,
             };
         }
     }

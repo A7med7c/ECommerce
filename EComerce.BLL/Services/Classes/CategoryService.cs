@@ -3,53 +3,70 @@ using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Category;
 using ECommerce.DAL.Repositories.Interfaces;
 
-namespace ECommerce.BLL.Services.Classes
+public class CategoryService(ICategoryRepository repository) : ICategoryService
 {
-    public class CategoryService(ICategoryRepository repository) : ICategoryService
+    // Get All
+    public IEnumerable<CategoriesVM> GetCategories()
     {
-        //[GetAll]
-        public IEnumerable<CategoriesVM> GetCategories()
-        {
-            var categories = repository.GetCategories();
-            return categories.Select(c => c.ToCategoriesVM());
-        }
-        //[GetById]
-        public CategoryDetailsVM? GetCategory(int id)
-        {
-            var category = repository.GetById(id);
-            return category is null ? null : category.ToCategoryDetailsVM();
-        }
-        //[Add]
-        public int AddCategory(AddCategoryVM vm)
-        {
-            if (string.IsNullOrWhiteSpace(vm.Name))
-                throw new ArgumentException("Category name is required");
+        var categories = repository.GetCategories();
+        return categories.Select(c => c.ToCategoriesVM());
+    }
 
-            if (vm.ParentCategoryId is not null)
-            {
-                var parent = repository.GetById(vm.ParentCategoryId.Value);
-                if (parent is null)
-                    throw new Exception("Parent category not found");
-            }
+    // Details
+    public CategoryDetailsVM? GetCategory(int id)
+    {
+        var category = repository.GetById(id);
+        return category is null ? null : category.ToCategoryDetailsVM();
+    }
 
-            var category = vm.ToEntity();
+    // ADD
+    public int AddCategory(AddCategoryVM vm)
+    {
+        if (string.IsNullOrWhiteSpace(vm.Name))
+            throw new ArgumentException("Category name is required");
 
-            return repository.Add(category);
-        }
-        //[Update]
-        public int UpdateCategory(UpdateCategoryVM updateCategoryVM)
+        if (vm.ParentCategoryId is not null)
         {
-            return repository.Update(updateCategoryVM.ToEntity());
+            var parent = repository.GetById(vm.ParentCategoryId.Value);
+            if (parent is null)
+                throw new Exception("Parent category not found");
         }
-        //[Delete]
-        public bool DeleteCategory(int id)
-        {
-            var category = repository.GetById(id);
 
-            if (category is null)
-                return false;
-            var numberOfRows = repository.Delete(category);
-            return numberOfRows > 0;
-        }
+        var category = vm.ToEntity();
+        return repository.Add(category);
+    }
+
+    // GET FOR EDIT
+    public UpdateCategoryVM? GetCategoryForEdit(int id)
+    {
+        var category = repository.GetById(id);
+        if (category is null)
+            return null;
+
+        return category.ToUpdateCategoryVM();
+    }
+
+    // UPDATE
+    public int UpdateCategory(UpdateCategoryVM vm)
+    {
+        var existingCategory = repository.GetById(vm.CategoryId);
+        if (existingCategory is null)
+            return 0;
+
+        existingCategory.Name = vm.Name;
+        existingCategory.ParentCategoryId = vm.ParentCategoryId;
+
+        return repository.Update(existingCategory);
+    }
+
+    // DELETE
+    public bool DeleteCategory(int id)
+    {
+        var category = repository.GetById(id);
+        if (category is null)
+            return false;
+
+        var numberOfRows = repository.Delete(category);
+        return numberOfRows > 0;
     }
 }

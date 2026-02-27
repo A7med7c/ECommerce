@@ -19,7 +19,10 @@ namespace ECommerce.PL.Controllers
         // GET: HomeController1/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var category = _categoryService.GetCategory(id);
+            if (category == null)
+                return NotFound();
+            return View(category);
         }
 
         // GET: HomeController1/Create
@@ -40,41 +43,59 @@ namespace ECommerce.PL.Controllers
 
                     if (result > 0)
                         return RedirectToAction("Index");
-
-                    ModelState.AddModelError(string.Empty, "Category can't be added");
+                    else
+                        ModelState.AddModelError(string.Empty, "Category can't be added");
                 }
                 catch (Exception ex)
                 {
                     if (_environment.IsDevelopment())
-                        _logger.LogError(ex, ex.Message);
+                        _logger.LogError($"Category can't be created because{ex.Message}", ex);
                     else
-                        _logger.LogError("Category can't be added");
+                        _logger.LogError($"Category can't be created because{ex}");
                 }
             }
 
-            ViewBag.categories = _categoryService.GetCategories();
+            ViewBag.ParentCategories = _categoryService.GetCategories();
             return View(addCategoryVM);
         }
 
         // GET: HomeController1/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var cateogry = _categoryService.GetCategoryForEdit(id);
+
+            if (cateogry != null)
+            {
+                ViewBag.ParentCategories = _categoryService.GetCategories();
+                return View(cateogry);
+            }
+            return NotFound();
         }
 
         // POST: HomeController1/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(UpdateCategoryVM updateCategoryVM)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    int result = _categoryService.UpdateCategory(updateCategoryVM);
+                    if (result > 0)
+                        return RedirectToAction("Index");
+                    else
+                        ModelState.AddModelError(string.Empty, "Category can't be updated");
+                }
+                catch (Exception ex)
+                {
+                    if (_environment.IsDevelopment())
+                        _logger.LogError($"Category can't be updated because{ex.Message}", ex);
+                    else
+                        _logger.LogError($"Category can't be updated because{ex}");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            ViewBag.ParentCategories = _categoryService.GetCategories();
+            return View(updateCategoryVM);
         }
 
         // GET: HomeController1/Delete/5

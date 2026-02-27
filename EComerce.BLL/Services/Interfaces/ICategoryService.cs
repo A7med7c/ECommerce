@@ -9,5 +9,6 @@ namespace ECommerce.BLL.Services.Interfaces
         IEnumerable<CategoriesVM> GetCategories();
         CategoryDetailsVM? GetCategory(int id);
         int UpdateCategory(UpdateCategoryVM updateCategoryVM);
+        public UpdateCategoryVM? GetCategoryForEdit(int id);
     }
 }

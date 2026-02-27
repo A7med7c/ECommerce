@@ -1,5 +1,4 @@
 using EComerce.DAL.Data.Contexts;
-using ECommerce.BLL.Services.Classes;
 using ECommerce.BLL.Services.Interfaces;
 using ECommerce.DAL.Repositories.Classes;
 using ECommerce.DAL.Repositories.Interfaces;
@@ -39,7 +38,7 @@ namespace ECommerce.PL
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts(); //Middleware that make ensure all requests int the deployment is https 
             }

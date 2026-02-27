@@ -1,6 +1,6 @@
 ﻿using ECommerce.BLL.ViewModels.Category;
 
-namespace ECommerce.BLL.Services
+namespace ECommerce.BLL.Services.Interfaces
 {
     public interface ICategoryService
     {

@@ -1,8 +1,9 @@
 ﻿using ECommerce.BLL.Factories;
+using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Category;
 using ECommerce.DAL.Repositories.Interfaces;
 
-namespace ECommerce.BLL.Services.Interfaces
+namespace ECommerce.BLL.Services.Classes
 {
     public class CategoryService(ICategoryRepository repository) : ICategoryService
     {
@@ -19,9 +20,21 @@ namespace ECommerce.BLL.Services.Interfaces
             return category is null ? null : category.ToCategoryDetailsVM();
         }
         //[Add]
-        public int AddCategory(AddCategoryVM addCategoryVM)
+        public int AddCategory(AddCategoryVM vm)
         {
-            return repository.Add(addCategoryVM.ToEntity());
+            if (string.IsNullOrWhiteSpace(vm.Name))
+                throw new ArgumentException("Category name is required");
+
+            if (vm.ParentCategoryId is not null)
+            {
+                var parent = repository.GetById(vm.ParentCategoryId.Value);
+                if (parent is null)
+                    throw new Exception("Parent category not found");
+            }
+
+            var category = vm.ToEntity();
+
+            return repository.Add(category);
         }
         //[Update]
         public int UpdateCategory(UpdateCategoryVM updateCategoryVM)

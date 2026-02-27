@@ -36,7 +36,6 @@ namespace ECommerce.BLL.Factories
             {
                 Name = addCategoryVM.Name,
                 ParentCategoryId = addCategoryVM.ParentCategoryId,
-                CreatedOn = addCategoryVM.CreatedOn.ToDateTime(new TimeOnly())
             };
         }
         public static Category ToEntity(this UpdateCategoryVM updateCategoryVM)

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<CategoriesVM>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2><a class="btn btn-primary" asp-action="Create">Create New Category</a></h2>
+@if (Model.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">@Html.DisplayNameFor(d => d.Name)</th>
+                <th scope="col">@Html.DisplayNameFor(d => d.CreatedOn)</th>
+                <th scope="col">Details</th>
+                <th scope="col">Update</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.Name</td>
+                    <td>@category.CreatedOn</td>
+                   <td>
+    <a class="btn btn-primary" asp-action="Details" asp-route-Id="@category.CategoryId">
+        <i class="fa-solid fa-circle-info me-1"></i> Details
+    </a>
+</td>
+
+<td>
+     <a class="btn btn-success" asp-action="Update" asp-route-Id="@category.CategoryId">
+        <i class="fa-solid fa-pen-to-square me-1"></i> Update
+    </a>
+</td>
+
+<td>
+    <a class="btn btn-danger" asp-action="Delete" asp-route-Id="@category.CategoryId">
+        <i class="fa-solid fa-trash me-1"></i> Delete
+    </a>
+</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+else
+{
+    <div class="alert alert-primary" role="alert">
+        There are no Categories Available
+    </div>
+}

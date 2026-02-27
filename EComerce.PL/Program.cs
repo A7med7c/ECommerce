@@ -1,5 +1,5 @@
 using EComerce.DAL.Data.Contexts;
-using ECommerce.BLL.Services;
+using ECommerce.BLL.Services.Classes;
 using ECommerce.BLL.Services.Interfaces;
 using ECommerce.DAL.Repositories.Classes;
 using ECommerce.DAL.Repositories.Interfaces;

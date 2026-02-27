@@ -1,6 +1,6 @@
 ﻿namespace ECommerce.DAL.Entities
 {
-    public class OrderItem
+    public class OrderItem : BaseEntity 
     {
         public int Quantity { get; set; }
         public decimal LineTotal { get; set; }

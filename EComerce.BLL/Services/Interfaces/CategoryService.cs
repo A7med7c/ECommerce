@@ -1,5 +1,4 @@
-﻿using EComerce.DAL.Entities;
-using ECommerce.BLL.Factories;
+﻿using ECommerce.BLL.Factories;
 using ECommerce.BLL.ViewModels.Category;
 using ECommerce.DAL.Repositories.Interfaces;
 

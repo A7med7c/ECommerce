@@ -8,7 +8,7 @@ public class CategoryService(ICategoryRepository repository) : ICategoryService
     // Get All
     public IEnumerable<CategoriesVM> GetCategories()
     {
-        var categories = repository.GetCategories();
+        var categories = repository.GetAll();
         return categories.Select(c => c.ToCategoriesVM());
     }
 
@@ -19,6 +19,17 @@ public class CategoryService(ICategoryRepository repository) : ICategoryService
         return category is null ? null : category.ToCategoryDetailsVM();
     }
 
+    public AddCategoryVM PrepareCreateVM()
+    {
+        return new AddCategoryVM
+        {
+            ParentCategories = repository
+                .GetAll()
+                .Where(c => !c.IsDeleted)
+                .Select(c => c.ToCategoriesVM())
+                .ToList()
+        };
+    }
     // ADD
     public int AddCategory(AddCategoryVM vm)
     {
@@ -40,25 +51,39 @@ public class CategoryService(ICategoryRepository repository) : ICategoryService
     public UpdateCategoryVM? GetCategoryForEdit(int id)
     {
         var category = repository.GetById(id);
-        if (category is null)
+
+        if (category == null || category.IsDeleted)
             return null;
 
-        return category.ToUpdateCategoryVM();
+        return new UpdateCategoryVM
+        {
+            CategoryId = category.Id,
+            Name = category.Name,
+            ParentCategoryId = category.ParentCategoryId,
+            ParentCategories = repository
+                .GetAll()
+                .Where(c => c.Id != id)
+                .Select(c => c.ToCategoriesVM())
+                .ToList()
+        };
     }
 
-    // UPDATE
     public int UpdateCategory(UpdateCategoryVM vm)
     {
         var existingCategory = repository.GetById(vm.CategoryId);
-        if (existingCategory is null)
+
+        if (existingCategory == null || existingCategory.IsDeleted)
             return 0;
 
-        existingCategory.Name = vm.Name;
+        if (vm.ParentCategoryId == vm.CategoryId)
+            throw new ArgumentException(
+                "Category cannot be parent of itself.");
+
+        existingCategory.Name = vm.Name.Trim();
         existingCategory.ParentCategoryId = vm.ParentCategoryId;
 
         return repository.Update(existingCategory);
     }
-
     // DELETE
     public bool DeleteCategory(int id)
     {

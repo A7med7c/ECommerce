@@ -1,36 +1,56 @@
 ﻿@model AddCategoryVM
 
-<div class="row justify-content-center align-content-center mt-3">
-    <h1 class="col-8 my-4">Create Category</h1>
+<div class="row justify-content-center mt-4">
 
-    <form class="col-8" method="post" asp-action="Create">
-        <div class="form-group mb-3">
-            <label class="form-label" asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
+    <div class="col-6">
 
-        <div class="form-group mb-3">
-            <label class="form-label">Parent Category</label>
+        <h2 class="mb-4">Create Category</h2>
 
-            <select asp-for="ParentCategoryId" class="form-select">
-                <option value="">-- Main Category --</option>
+        <form asp-action="Create" method="post">
 
-                @foreach (var category in ViewBag.Categories)
-                {
-                    <option value="@category.CategoryId">
-                        @category.Name
+            <!-- Name -->
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name"
+                      class="text-danger"></span>
+            </div>
+
+            <!-- Parent Category -->
+            <div class="mb-3">
+                <label class="form-label">
+                    Parent Category
+                </label>
+
+                <select asp-for="ParentCategoryId"
+                        class="form-select">
+
+                    <option value="">
+                        -- Main Category --
                     </option>
-                }
-            </select>
-        </div>
 
-        <div class="mt-4">
-            <input class="btn btn-primary" type="submit" value="Create" />
-            <a class="btn btn-outline-dark" asp-action="Index">
-                Back to list
+                    @foreach (var category in Model.ParentCategories)
+                    {
+                        <option value="@category.CategoryId">
+                            @category.Name
+                        </option>
+                    }
+
+                </select>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Create
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+                Back
             </a>
-        </div>
 
-    </form>
+        </form>
+
+    </div>
+
 </div>

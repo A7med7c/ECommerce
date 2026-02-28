@@ -1,50 +1,64 @@
 ﻿@model UpdateCategoryVM
 
-<div class="row justify-content-center align-content-center mt-3">
+<div class="row justify-content-center mt-4">
+    <div class="col-6">
 
-    <h1 class="col-8 my-4">Edit Category</h1>
+        <h2 class="mb-4">Edit Category</h2>
 
-    <form class="col-8" method="post" asp-action="Edit">
+        <form asp-action="Edit"
+              asp-route-id="@Model.CategoryId"
+              method="post">
 
-        <!-- Hidden Id -->
-        <input type="hidden" asp-for="CategoryId" />
 
-        <!-- Name -->
-        <div class="form-group mb-3">
-            <label class="form-label" asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
+            <input type="hidden"
+                   asp-for="CategoryId" />
 
-        <!-- Parent Category -->
-        <div class="form-group mb-3">
-            <label class="form-label">Parent Category</label>
+            <!-- Name -->
+            <div class="mb-3">
+                <label asp-for="Name"
+                       class="form-label"></label>
 
-            <select asp-for="ParentCategoryId" class="form-select">
+                <input asp-for="Name"
+                       class="form-control" />
 
-                <option value="">-- Main Category --</option>
+                <span asp-validation-for="Name"
+                      class="text-danger"></span>
+            </div>
 
-                @foreach (var category in ViewBag.ParentCategories)
-                {
-                    <option value="@category.CategoryId">
-                        @category.Name
+            <!-- Parent Category -->
+            <div class="mb-3">
+                <label class="form-label">
+                    Parent Category
+                </label>
+
+                <select asp-for="ParentCategoryId"
+                        class="form-select">
+
+                    <option value="">
+                        -- Main Category --
                     </option>
-                }
 
-            </select>
+                    @foreach (var category in Model.ParentCategories)
+                    {
+                        <option value="@category.CategoryId">
+                            @category.Name
+                        </option>
+                    }
 
-            <span asp-validation-for="ParentCategoryId"
-                  class="text-danger"></span>
-        </div>
+                </select>
+            </div>
 
-        <!-- Buttons -->
-        <div class="mt-4">
-            <input class="btn btn-success" type="submit" value="Update" />
-            <a class="btn btn-outline-dark" asp-action="Index">
-                Cancel
+            <button type="submit"
+                    class="btn btn-success">
+                Update
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+                Back
             </a>
-        </div>
 
-    </form>
+        </form>
 
+    </div>
 </div>

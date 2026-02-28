@@ -17,100 +17,120 @@ namespace ECommerce.PL.Controllers
         }
 
         // GET: HomeController1/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            var category = _categoryService.GetCategory(id);
+            if (!id.HasValue) return BadRequest();
+
+            var category = _categoryService.GetCategory(id.Value);
+
             if (category == null)
                 return NotFound();
             return View(category);
         }
 
-        // GET: HomeController1/Create
-        public ActionResult Create()
+        // GET
+        public IActionResult Create()
         {
-            ViewBag.categories = _categoryService.GetCategories();
-            return View();
+            var vm = _categoryService.PrepareCreateVM();
+            return View(vm);
         }
 
+
+        // POST
         [HttpPost]
-        public ActionResult Create(AddCategoryVM addCategoryVM)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    int result = _categoryService.AddCategory(addCategoryVM);
-
-                    if (result > 0)
-                    {
-                        TempData["SuccessMessage"] = "Category created successfully!";
-                        return RedirectToAction(nameof(Index));
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, "Category can't be added");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (_environment.IsDevelopment())
-                        _logger.LogError($"Category can't be created because{ex.Message}", ex);
-                    else
-                        _logger.LogError($"Category can't be created because{ex}");
-                }
-            }
-
-            ViewBag.ParentCategories = _categoryService.GetCategories();
-            return View(addCategoryVM);
-        }
-
-        // GET: HomeController1/Edit/5
-        public ActionResult Edit(int id)
-        {
-            var cateogry = _categoryService.GetCategoryForEdit(id);
-
-            if (cateogry != null)
-            {
-                ViewBag.ParentCategories = _categoryService.GetCategories();
-                return View(cateogry);
-            }
-            return NotFound();
-        }
-
-        // POST: HomeController1/Edit/5
-        [HttpPost]
-        public IActionResult Edit(UpdateCategoryVM vm)
+        public IActionResult Create(AddCategoryVM vm)
         {
             if (!ModelState.IsValid)
+            {
+                vm = _categoryService.PrepareCreateVM();
                 return View(vm);
+            }
+
+            try
+            {
+                int result = _categoryService.AddCategory(vm);
+
+                if (result > 0)
+                {
+                    TempData["SuccessMessage"] =
+                        "Category created successfully!";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                TempData["ErrorMessage"] = "Create failed.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating category");
+                TempData["ErrorMessage"] =
+                    "Something went wrong.";
+            }
+
+            vm = _categoryService.PrepareCreateVM();
+            return View(vm);
+        }
+        public IActionResult Edit(int id)
+        {
+            if (id <= 0)
+                return BadRequest();
+
+            var vm = _categoryService.GetCategoryForEdit(id);
+
+            if (vm == null)
+                return NotFound();
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, UpdateCategoryVM vm)
+        {
+            if (id <= 0)
+                return BadRequest();
+
+            if (id != vm.CategoryId)
+                return BadRequest(); // 🔐 ID tampering protection
+
+            if (!ModelState.IsValid)
+            {
+                vm = _categoryService.GetCategoryForEdit(id)!;
+                return View(vm);
+            }
 
             try
             {
                 int result = _categoryService.UpdateCategory(vm);
 
-                if (result > 0)
+                if (result == 0)
                 {
-                    TempData["SuccessMessage"] = "Category updated successfully!";
-                    return RedirectToAction(nameof(Index));
+                    TempData["ErrorMessage"] =
+                        "Category not found.";
                 }
-
-                TempData["ErrorMessage"] = "Update failed.";
-                return RedirectToAction(nameof(Index));
+                else
+                {
+                    TempData["SuccessMessage"] =
+                        "Category updated successfully!";
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating category");
-                TempData["ErrorMessage"] = "Something went wrong.";
-                return RedirectToAction(nameof(Index));
-            }
-        }
+                _logger.LogError(ex,
+                    "Error updating category with id {CategoryId}", id);
 
+                TempData["ErrorMessage"] =
+                    "Something went wrong.";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
         [HttpPost]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int? id)
         {
             try
             {
-                bool result = _categoryService.DeleteCategory(id);
+                if (!id.HasValue) return BadRequest();
+                bool result = _categoryService.DeleteCategory(id.Value);
 
                 if (!result)
                 {

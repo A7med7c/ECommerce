@@ -11,7 +11,12 @@ namespace ECommerce.DAL.Repositories.Classes
     {
 
         //[GetAllCategories]
-        public IEnumerable<Category> GetCategories(bool tracking = false) => _dbContext.Categories.ToList();
+        public IEnumerable<Category> GetCategories(bool tracking = false)
+        {
+            return _dbContext.Categories
+                .Where(c => !c.IsDeleted)
+                .ToList();
+        }
         //[GatDepartmentByID]
         public Category? GetById(int id)
         {
@@ -35,7 +40,10 @@ namespace ECommerce.DAL.Repositories.Classes
         //[Delete]
         public int Delete(Category category)
         {
-            _dbContext.Categories.Remove(category);
+            category.IsDeleted = true;
+            category.ModifiedOn = DateTime.Now;
+
+            _dbContext.Categories.Update(category);
             return _dbContext.SaveChanges();
         }
     }

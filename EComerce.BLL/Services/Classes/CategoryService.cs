@@ -63,10 +63,12 @@ public class CategoryService(ICategoryRepository repository) : ICategoryService
     public bool DeleteCategory(int id)
     {
         var category = repository.GetById(id);
+
         if (category is null)
             return false;
 
         var numberOfRows = repository.Delete(category);
+
         return numberOfRows > 0;
     }
 }

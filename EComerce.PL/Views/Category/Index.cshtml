@@ -1,53 +1,134 @@
 ﻿@model IEnumerable<CategoriesVM>
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Categories";
 }
 
-<h2><a class="btn btn-primary" asp-action="Create">Create New Category</a></h2>
+<h2 class="mb-3">
+    <a class="btn btn-primary" asp-action="Create">
+        <i class="fa-solid fa-plus me-1"></i>
+        Create New Category
+    </a>
+</h2>
+
 @if (Model.Any())
 {
-    <table class="table table-hover">
-        <thead>
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
             <tr>
-                <th scope="col">@Html.DisplayNameFor(d => d.Name)</th>
-                <th scope="col">@Html.DisplayNameFor(d => d.CreatedOn)</th>
-                <th scope="col">Details</th>
-                <th scope="col">Update</th>
-                <th scope="col">Delete</th>
+                <th>@Html.DisplayNameFor(d => d.Name)</th>
+                <th>@Html.DisplayNameFor(d => d.CreatedOn)</th>
+                <th class="text-center">Actions</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach (var category in Model)
             {
                 <tr>
                     <td>@category.Name</td>
                     <td>@category.CreatedOn</td>
-                   <td>
-    <a class="btn btn-primary" asp-action="Details" asp-route-Id="@category.CategoryId">
-        <i class="fa-solid fa-circle-info me-1"></i> Details
-    </a>
-</td>
 
-<td>
-     <a class="btn btn-success" asp-action="Edit" asp-route-Id="@category.CategoryId">
-        <i class="fa-solid fa-pen-to-square me-1"></i> Update
-    </a>
-</td>
+                    <td class="text-center">
 
-<td>
-    <a class="btn btn-danger" asp-action="Delete" asp-route-Id="@category.CategoryId">
-        <i class="fa-solid fa-trash me-1"></i> Delete
-    </a>
-</td>
+                        <!-- Details -->
+                        <a class="btn btn-sm btn-primary"
+                           asp-action="Details"
+                           asp-route-id="@category.CategoryId">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </a>
+
+                        <!-- Update -->
+                        <a class="btn btn-sm btn-success"
+                           asp-action="Edit"
+                           asp-route-id="@category.CategoryId">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+
+                        <!-- Delete -->
+                        <a href="#"
+                           class="btn btn-sm btn-danger delete-btn"
+                           data-id="@category.CategoryId">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
-
 }
 else
 {
-    <div class="alert alert-primary" role="alert">
-        There are no Categories Available
-   </div>
+    <div class="alert alert-info">
+        There are no categories available.
+    </div>
 }
+
+<form id="deleteForm" asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="deleteId" />
+</form>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '@TempData["SuccessMessage"]',
+                confirmButtonColor: '#3085d6'
+            });
+        });
+    </script>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '@TempData["ErrorMessage"]',
+                confirmButtonColor: '#d33'
+            });
+        });
+    </script>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.querySelectorAll(".delete-btn").forEach(button => {
+
+            button.addEventListener("click", function (e) {
+
+                e.preventDefault();
+
+                const id = this.getAttribute("data-id");
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "This category will be deleted!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#6c757d",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        document.getElementById("deleteId").value = id;
+                        document.getElementById("deleteForm").submit();
+                    }
+
+                });
+
+            });
+
+        });
+
+    });
+</script>

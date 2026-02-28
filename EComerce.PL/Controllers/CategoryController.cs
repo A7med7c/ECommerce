@@ -42,9 +42,14 @@ namespace ECommerce.PL.Controllers
                     int result = _categoryService.AddCategory(addCategoryVM);
 
                     if (result > 0)
-                        return RedirectToAction("Index");
+                    {
+                        TempData["SuccessMessage"] = "Category created successfully!";
+                        return RedirectToAction(nameof(Index));
+                    }
                     else
+                    {
                         ModelState.AddModelError(string.Empty, "Category can't be added");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -74,48 +79,61 @@ namespace ECommerce.PL.Controllers
 
         // POST: HomeController1/Edit/5
         [HttpPost]
-        public ActionResult Edit(UpdateCategoryVM updateCategoryVM)
+        public IActionResult Edit(UpdateCategoryVM vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            try
             {
-                try
+                int result = _categoryService.UpdateCategory(vm);
+
+                if (result > 0)
                 {
-                    int result = _categoryService.UpdateCategory(updateCategoryVM);
-                    if (result > 0)
-                        return RedirectToAction("Index");
-                    else
-                        ModelState.AddModelError(string.Empty, "Category can't be updated");
+                    TempData["SuccessMessage"] = "Category updated successfully!";
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (Exception ex)
-                {
-                    if (_environment.IsDevelopment())
-                        _logger.LogError($"Category can't be updated because{ex.Message}", ex);
-                    else
-                        _logger.LogError($"Category can't be updated because{ex}");
-                }
+
+                TempData["ErrorMessage"] = "Update failed.";
+                return RedirectToAction(nameof(Index));
             }
-            ViewBag.ParentCategories = _categoryService.GetCategories();
-            return View(updateCategoryVM);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating category");
+                TempData["ErrorMessage"] = "Something went wrong.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
-        // GET: HomeController1/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: HomeController1/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(int id)
         {
             try
             {
+                bool result = _categoryService.DeleteCategory(id);
+
+                if (!result)
+                {
+                    _logger.LogWarning($"Delete failed: Category Id = {id}");
+                    TempData["ErrorMessage"] = "Category not found.";
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Category deleted successfully.";
+                }
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                if (_environment.IsDevelopment())
+                    _logger.LogError(ex, $"Error deleting category {id}");
+                else
+                    _logger.LogError("Error deleting category");
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+
+                return RedirectToAction(nameof(Index));
             }
         }
     }

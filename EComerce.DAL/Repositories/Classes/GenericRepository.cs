@@ -1,59 +1,56 @@
-﻿using EComerce.DAL.Data.Contexts;
+using EComerce.DAL.Data.Contexts;
 using ECommerce.DAL.Repositories.Interfaces;
 using System.Linq.Expressions;
 
 namespace ECommerce.DAL.Repositories.Classes
 {
-    public class GenericRepository<TEntity>(ApplicationDbContext _dbContext) : IGenericRepository<TEntity> where TEntity : BaseEntity
+    /// <summary>
+    /// Generic EF Core repository.
+    /// All mutation methods (Add/Update/Delete) only stage changes on the
+    /// ChangeTracker. Callers MUST invoke IUnitOfWork.Complete() to persist.
+    /// </summary>
+    public class GenericRepository<TEntity>(ApplicationDbContext _dbContext)
+        : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
-
-        private DbSet<TEntity> Table
-            => _dbContext.Set<TEntity>();
+        protected DbSet<TEntity> Table => _dbContext.Set<TEntity>();
 
         public IEnumerable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes)
         {
             IQueryable<TEntity> query = Table.Where(e => !e.IsDeleted);
-
             foreach (var include in includes)
                 query = query.Include(include);
-
             return query.ToList();
         }
 
-        // Get By Id
+        public IEnumerable<TEntity> Find(
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Table.Where(e => !e.IsDeleted).Where(predicate);
+            foreach (var include in includes)
+                query = query.Include(include);
+            return query.ToList();
+        }
+
         public TEntity? GetById(int id, params Expression<Func<TEntity, object>>[] includes)
         {
             IQueryable<TEntity> query = Table;
-
             foreach (var include in includes)
                 query = query.Include(include);
-
-            return query
-                .FirstOrDefault(e => e.Id == id && !e.IsDeleted);
+            return query.FirstOrDefault(e => e.Id == id && !e.IsDeleted);
         }
 
-        // Add
-        public int Add(TEntity entity)
-        {
-            Table.Add(entity);
-            return _dbContext.SaveChanges();
-        }
+        public void Add(TEntity entity)
+            => Table.Add(entity);
 
-        // Update
-        public int Update(TEntity entity)
-        {
-            Table.Update(entity);
-            return _dbContext.SaveChanges();
-        }
+        public void Update(TEntity entity)
+            => Table.Update(entity);
 
-        // Soft Delete
-        public int Delete(TEntity entity)
+        public void Delete(TEntity entity)
         {
             entity.IsDeleted = true;
             entity.ModifiedOn = DateTime.UtcNow;
-
             Table.Update(entity);
-            return _dbContext.SaveChanges();
         }
     }
 }

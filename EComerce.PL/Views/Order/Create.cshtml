@@ -1,0 +1,105 @@
+@model CreateOrderVM
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <h2 class="mb-0">
+        <i class="fa-solid fa-lock me-2 text-primary"></i>Checkout
+    </h2>
+</div>
+
+<form asp-action="Create" method="post">
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
+
+    <div class="row g-4">
+
+        <!-- ── Shipping Address form ───────────────────────────── -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white fw-semibold">
+                    <i class="fa-solid fa-location-dot me-2"></i>Shipping Address
+                </div>
+                <div class="card-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <label asp-for="Street" class="form-label"></label>
+                            <input asp-for="Street" class="form-control" placeholder="123 Main St" />
+                            <span asp-validation-for="Street" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="City" class="form-label"></label>
+                            <input asp-for="City" class="form-control" placeholder="Cairo" />
+                            <span asp-validation-for="City" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Zip" class="form-label"></label>
+                            <input asp-for="Zip" class="form-control" placeholder="12345" />
+                            <span asp-validation-for="Zip" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Country" class="form-label"></label>
+                            <input asp-for="Country" class="form-control" placeholder="Egypt" />
+                            <span asp-validation-for="Country" class="text-danger small"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Order summary ──────────────────────────────────── -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-semibold">
+                    <i class="fa-solid fa-receipt me-2"></i>Order Summary
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-start py-2 px-3">
+                                <div>
+                                    <div class="fw-semibold">@item.ProductName</div>
+                                    <small class="text-muted">
+                                        <span class="badge bg-light text-dark border me-1">@item.SKU</span>
+                                        &times; @item.Quantity @@ @item.UnitPrice.ToString("C")
+                                    </small>
+                                </div>
+                                <span class="fw-bold text-success">@item.LineTotal.ToString("C")</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>Total</span>
+                        <span class="text-primary">@Model.Total.ToString("C")</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-3">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-lock me-2"></i>Place Order
+                </button>
+                <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrow-left me-1"></i>Back to Cart
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

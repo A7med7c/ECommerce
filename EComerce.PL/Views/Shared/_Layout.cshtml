@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EComerce.PL.styles.css" asp-append-version="true" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+            integrity="sha256-H4E+lEH05GVDCnvOHJEmpX9oe3l+hAK7Nq1vr7VO7fI="            crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
@@ -15,7 +19,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Shopify</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent"  aria-expanded="false" aria-label="Toggle navigation">
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -34,6 +38,10 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product"
                                asp-action="Index">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Order"
+                               asp-action="Index">Orders</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
@@ -66,24 +74,23 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <script>
-        // Refresh cart badge count on every page using the lightweight /Cart/Count endpoint.
-        (function () {
-        fetch('/Cart/Count')
-        .then(r => r.json())
-        .then(data => {
-        var badge = document.getElementById('cart-badge');
-        if (!badge) return;
-        if (data.count > 0) {
-        badge.textContent = data.count > 99 ? '99+' : data.count;
-        badge.style.display = '';
-        } else {
-        badge.style.display = 'none';
-        }
-        })
-        .catch(function () { /* silent fail */ });
-        })();
+            // Refresh cart badge count on every page using the lightweight /Cart/Count endpoint.
+            (function () {
+            fetch('/Cart/Count')
+            .then(r => r.json())
+            .then(data => {
+            var badge = document.getElementById('cart-badge');
+            if (!badge) return;
+            if (data.count > 0) {
+            badge.textContent = data.count > 99 ? '99+' : data.count;
+            badge.style.display = '';
+            } else {
+            badge.style.display = 'none';
+            }
+            })
+            .catch(function () { /* silent fail */ });
+            })();
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

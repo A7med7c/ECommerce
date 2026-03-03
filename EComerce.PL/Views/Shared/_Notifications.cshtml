@@ -1,0 +1,40 @@
+@* ─── Reusable TempData alert partial ───────────────────────────────────────
+   Usage: @await Html.PartialAsync("_Notifications")
+   Reads well-known TempData keys and renders the appropriate Bootstrap alert.
+   Add new keys below as the project grows (e.g. "OrderSuccess"). *@
+
+@if (TempData["CartSuccess"] is string cartOk && !string.IsNullOrEmpty(cartOk))
+{
+    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>@cartOk</span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["CartError"] is string cartErr && !string.IsNullOrEmpty(cartErr))
+{
+    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>@cartErr</span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["SuccessMessage"] is string success && !string.IsNullOrEmpty(success))
+{
+    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>@success</span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is string error && !string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>@error</span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}

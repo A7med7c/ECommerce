@@ -1,99 +1,71 @@
-﻿using ECommerce.BLL.Factories;
+using AutoMapper;
+using EComerce.DAL.Entities;
 using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Category;
 using ECommerce.DAL.Repositories.Interfaces;
 
-public class CategoryService(ICategoryRepository repository) : ICategoryService
+namespace ECommerce.BLL.Services.Classes
 {
-    // Get All
-    public IEnumerable<CategoriesVM> GetCategories()
+    public class CategoryService(IUnitOfWork _unitOfWork, IMapper _mapper) : ICategoryService
     {
-        var categories = repository.GetAll();
-        return categories.Select(c => c.ToCategoriesVM());
-    }
-
-    // Details
-    public CategoryDetailsVM? GetCategory(int id)
-    {
-        var category = repository.GetById(id);
-        return category is null ? null : category.ToCategoryDetailsVM();
-    }
-
-    public AddCategoryVM PrepareCreateVM()
-    {
-        return new AddCategoryVM
+        public IEnumerable<CategoriesVM> GetCategories()
         {
-            ParentCategories = repository
-                .GetAll()
-                .Where(c => !c.IsDeleted)
-                .Select(c => c.ToCategoriesVM())
-                .ToList()
-        };
-    }
-    // ADD
-    public int AddCategory(AddCategoryVM vm)
-    {
-        if (string.IsNullOrWhiteSpace(vm.Name))
-            throw new ArgumentException("Category name is required");
-
-        if (vm.ParentCategoryId is not null)
-        {
-            var parent = repository.GetById(vm.ParentCategoryId.Value);
-            if (parent is null)
-                throw new Exception("Parent category not found");
+            var categories = _unitOfWork.Categories.GetAll();
+            return _mapper.Map<IEnumerable<CategoriesVM>>(categories);
         }
 
-        var category = vm.ToEntity();
-        return repository.Add(category);
-    }
-
-    // GET FOR EDIT
-    public UpdateCategoryVM? GetCategoryForEdit(int id)
-    {
-        var category = repository.GetById(id);
-
-        if (category == null || category.IsDeleted)
-            return null;
-
-        return new UpdateCategoryVM
+        public CategoryDetailsVM? GetCategory(int id)
         {
-            CategoryId = category.Id,
-            Name = category.Name,
-            ParentCategoryId = category.ParentCategoryId,
-            ParentCategories = repository
-                .GetAll()
-                .Where(c => c.Id != id)
-                .Select(c => c.ToCategoriesVM())
-                .ToList()
-        };
-    }
+            var category = _unitOfWork.Categories.GetById(id, c => c.ParentCategory!);
+            if (category is null) return null;
+            return _mapper.Map<CategoryDetailsVM>(category);
+        }
 
-    public int UpdateCategory(UpdateCategoryVM vm)
-    {
-        var existingCategory = repository.GetById(vm.CategoryId);
+        public AddCategoryVM PrepareCreateVM()
+        {
+            return new AddCategoryVM
+            {
+                ParentCategories = _mapper.Map<List<CategoriesVM>>(_unitOfWork.Categories.GetAll())
+            };
+        }
 
-        if (existingCategory == null || existingCategory.IsDeleted)
-            return 0;
+        public int AddCategory(AddCategoryVM vm)
+        {
+            var category = _mapper.Map<Category>(vm);
+            _unitOfWork.Categories.Add(category);
+            return _unitOfWork.Complete();
+        }
 
-        if (vm.ParentCategoryId == vm.CategoryId)
-            throw new ArgumentException(
-                "Category cannot be parent of itself.");
+        public UpdateCategoryVM? GetCategoryForEdit(int id)
+        {
+            var category = _unitOfWork.Categories.GetById(id);
+            if (category is null) return null;
 
-        existingCategory.Name = vm.Name.Trim();
-        existingCategory.ParentCategoryId = vm.ParentCategoryId;
+            var vm = _mapper.Map<UpdateCategoryVM>(category);
+            vm.ParentCategories = _mapper.Map<List<CategoriesVM>>(
+                _unitOfWork.Categories.GetAll().Where(c => c.Id != id));
 
-        return repository.Update(existingCategory);
-    }
-    // DELETE
-    public bool DeleteCategory(int id)
-    {
-        var category = repository.GetById(id);
+            return vm;
+        }
 
-        if (category is null)
-            return false;
+        public int UpdateCategory(UpdateCategoryVM vm)
+        {
+            var existing = _unitOfWork.Categories.GetById(vm.CategoryId);
+            if (existing is null) return 0;
 
-        var numberOfRows = repository.Delete(category);
+            // Map only scalar properties onto the tracked entity
+            _mapper.Map(vm, existing);
+            _unitOfWork.Categories.Update(existing);
+            return _unitOfWork.Complete();
+        }
 
-        return numberOfRows > 0;
+        public bool DeleteCategory(int id)
+        {
+            var category = _unitOfWork.Categories.GetById(id);
+            if (category is null) return false;
+
+            _unitOfWork.Categories.Delete(category);
+            return _unitOfWork.Complete() > 0;
+        }
     }
 }

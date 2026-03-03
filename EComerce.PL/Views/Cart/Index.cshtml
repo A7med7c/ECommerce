@@ -1,0 +1,167 @@
+@model CartVM
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+@await Html.PartialAsync("_Notifications")
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="mb-0">
+        <i class="fa-solid fa-cart-shopping me-2 text-primary"></i>Shopping Cart
+    </h2>
+    @if (!Model.IsEmpty)
+    {
+        <form asp-action="Clear" asp-controller="Cart" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit"
+                    class="btn btn-outline-danger btn-sm"
+                    onclick="return confirm('Clear the entire cart?')">
+                <i class="fa-solid fa-trash me-1"></i>Clear Cart
+            </button>
+        </form>
+    }
+</div>
+
+@if (Model.IsEmpty)
+{
+    <div class="text-center py-5">
+        <i class="fa-solid fa-cart-shopping fa-4x text-muted mb-4 d-block"></i>
+        <h4 class="text-muted">Your cart is empty</h4>
+        <p class="text-muted mb-4">Looks like you haven't added anything yet.</p>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-bag-shopping me-2"></i>Browse Products
+        </a>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+
+        
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Product</th>
+                                    <th>SKU</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-end">Line Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr id="row-@item.ProductId">
+                                        <td class="ps-4 fw-semibold">@item.ProductName</td>
+                                        <td><span class="badge bg-light text-dark border">@item.SKU</span></td>
+                                        <td class="text-end text-muted">@item.UnitPrice.ToString("C")</td>
+
+                                        @* ── Quantity controls ─────────────────── *@
+                                        <td class="text-center" style="min-width:170px">
+                                            <div class="d-flex align-items-center justify-content-center gap-1">
+
+                                                @* Decrease *@
+                                                <form asp-action="Update" asp-controller="Cart" method="post" class="m-0">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                                    <input type="hidden" name="quantity"  value="@(item.Quantity - 1)" />
+                                                    <button type="submit"
+                                                            class="btn btn-outline-secondary btn-sm px-2"
+                                                            title="@(item.Quantity == 1 ? "Remove item" : "Decrease quantity")">
+                                                        <i class="fa-solid @(item.Quantity == 1 ? "fa-trash" : "fa-minus")"></i>
+                                                    </button>
+                                                </form>
+
+                                                <span class="px-2 fw-bold fs-6" style="min-width:28px;text-align:center">
+                                                    @item.Quantity
+                                                </span>
+
+                                                @* Increase *@
+                                                <form asp-action="Update" asp-controller="Cart" method="post" class="m-0">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                                    <input type="hidden" name="quantity"  value="@(item.Quantity + 1)" />
+                                                    <button type="submit"
+                                                            class="btn btn-outline-secondary btn-sm px-2"
+                                                            title="Increase quantity"
+                                                            @(item.Quantity >= item.StockQuantity ? "disabled" : "")>
+                                                        <i class="fa-solid fa-plus"></i>
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                            <div class="text-muted small mt-1">@item.StockQuantity in stock</div>
+                                        </td>
+
+                                        <td class="text-end fw-semibold text-success">
+                                            @item.LineTotal.ToString("C")
+                                        </td>
+
+                                        
+                                        <td class="text-center pe-3">
+                                            <form asp-action="Remove" asp-controller="Cart" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <button type="submit"
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        title="Remove item">
+                                                    <i class="fa-solid fa-xmark"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Continue Shopping
+                </a>
+            </div>
+        </div>
+
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fa-solid fa-receipt me-2"></i>Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">Items (@Model.TotalItems)</span>
+                            <span>@Model.SubTotal.ToString("C")</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">Shipping</span>
+                            <span class="text-success">Free</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 fw-bold fs-5">
+                            <span>Total</span>
+                            <span class="text-primary">@Model.SubTotal.ToString("C")</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="#" class="btn btn-primary w-100 btn-lg">
+                        <i class="fa-solid fa-lock me-2"></i>Proceed to Checkout
+                    </a>
+                    <p class="text-muted text-center small mt-2 mb-0">
+                        <i class="fa-solid fa-shield-halved me-1"></i>Secure checkout
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

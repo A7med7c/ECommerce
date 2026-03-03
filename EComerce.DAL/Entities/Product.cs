@@ -1,6 +1,6 @@
 ﻿namespace ECommerce.DAL.Entities
 {
-    public class Product : BaseEntity 
+    public class Product : BaseEntity
     {
         public string Name { get; set; } = null!;
         public string SKU { get; set; } = null!;

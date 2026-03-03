@@ -1,0 +1,20 @@
+﻿@model ProductCreateUpdateVM
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<h2>Create Product</h2>
+
+<form asp-action="Create" method="post">
+
+    <partial name="_ProductForm" model="Model" />
+
+    <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk me-1"></i>Save</button>
+    <a asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-xmark me-1"></i>Cancel</a>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

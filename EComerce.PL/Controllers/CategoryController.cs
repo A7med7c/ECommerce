@@ -9,14 +9,13 @@ namespace ECommerce.PL.Controllers
         , IWebHostEnvironment _environment, ILogger<Category> _logger) : Controller
     {
 
-        // GET: HomeController1
+        // GET
         public ActionResult Index()
         {
             var categories = _categoryService.GetCategories();
             return View(categories);
         }
 
-        // GET: HomeController1/Details/5
         public ActionResult Details(int? id)
         {
             if (!id.HasValue) return BadRequest();
@@ -38,6 +37,7 @@ namespace ECommerce.PL.Controllers
 
         // POST
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(AddCategoryVM vm)
         {
             if (!ModelState.IsValid)
@@ -90,7 +90,7 @@ namespace ECommerce.PL.Controllers
                 return BadRequest();
 
             if (id != vm.CategoryId)
-                return BadRequest(); // 🔐 ID tampering protection
+                return BadRequest();
 
             if (!ModelState.IsValid)
             {
@@ -125,6 +125,7 @@ namespace ECommerce.PL.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int? id)
         {
             try

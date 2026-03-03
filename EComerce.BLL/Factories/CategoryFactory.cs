@@ -9,7 +9,7 @@ namespace ECommerce.BLL.Factories
         {
             return new CategoriesVM()
             {
-                CategoryId = category.Id,
+                Id = category.Id,
                 Name = category.Name,
                 ParentCategoryId = category.ParentCategoryId,
                 CreatedOn = category.CreatedOn.HasValue ? DateOnly.FromDateTime(category.CreatedOn.Value) : default

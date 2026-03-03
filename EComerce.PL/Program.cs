@@ -1,4 +1,5 @@
 using EComerce.DAL.Data.Contexts;
+using ECommerce.BLL.Services.Classes;
 using ECommerce.BLL.Services.Interfaces;
 using ECommerce.DAL.Repositories.Classes;
 using ECommerce.DAL.Repositories.Interfaces;
@@ -29,6 +30,8 @@ namespace ECommerce.PL
 
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
             #endregion
 
 

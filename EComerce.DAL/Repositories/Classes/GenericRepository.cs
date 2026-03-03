@@ -1,5 +1,6 @@
 ﻿using EComerce.DAL.Data.Contexts;
 using ECommerce.DAL.Repositories.Interfaces;
+using System.Linq.Expressions;
 
 namespace ECommerce.DAL.Repositories.Classes
 {
@@ -9,22 +10,25 @@ namespace ECommerce.DAL.Repositories.Classes
         private DbSet<TEntity> Table
             => _dbContext.Set<TEntity>();
 
-        // Get All
-        public IEnumerable<TEntity> GetAll(bool tracking = false)
+        public IEnumerable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes)
         {
-            if (tracking)
-                return Table.Where(e => !e.IsDeleted).ToList();
+            IQueryable<TEntity> query = Table.Where(e => !e.IsDeleted);
 
-            return Table
-                .AsNoTracking()
-                .Where(e => !e.IsDeleted)
-                .ToList();
+            foreach (var include in includes)
+                query = query.Include(include);
+
+            return query.ToList();
         }
 
         // Get By Id
-        public TEntity? GetById(int id)
+        public TEntity? GetById(int id, params Expression<Func<TEntity, object>>[] includes)
         {
-            return Table
+            IQueryable<TEntity> query = Table;
+
+            foreach (var include in includes)
+                query = query.Include(include);
+
+            return query
                 .FirstOrDefault(e => e.Id == id && !e.IsDeleted);
         }
 

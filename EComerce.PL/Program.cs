@@ -1,8 +1,12 @@
 using EComerce.DAL.Data.Contexts;
+using ECommerce.BLL.Mappings;
 using ECommerce.BLL.Services.Classes;
 using ECommerce.BLL.Services.Interfaces;
+using ECommerce.BLL.Validators;
 using ECommerce.DAL.Repositories.Classes;
 using ECommerce.DAL.Repositories.Interfaces;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.PL
@@ -28,10 +32,34 @@ namespace ECommerce.PL
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
             });
 
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            // ── Unit of Work (replaces individual repository registrations) ──
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // ── Application Services ──────────────────────────────────────
             builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductService, ProductService>();
+
+            // ── Shopping Cart ─────────────────────────────────────────────
+            // IHttpContextAccessor: lets BLL services reach the HTTP session
+            // without depending on Controller/ControllerBase directly.
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<ICartService, CartService>();
+
+            // ── Session (in-process; swap DistributedCache for Redis in prod) ──
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;   // JS cannot read the cookie
+                options.Cookie.IsEssential = true;   // GDPR: required for function
+                options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+            });
+
+            // ── AutoMapper (scans BLL assembly for all Profile classes) ───
+            builder.Services.AddAutoMapper(typeof(CategoryProfile).Assembly);
+
+            // ── FluentValidation (scans BLL assembly for all validators) ──
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddValidatorsFromAssemblyContaining<AddCategoryValidator>();
             #endregion
 
 
@@ -52,6 +80,7 @@ namespace ECommerce.PL
 
             app.UseRouting();
 
+            app.UseSession();   // ← must be after UseRouting, before endpoints
 
             //app.UseAuthentication(); // must be before authorization.
             //app.UseAuthorization();

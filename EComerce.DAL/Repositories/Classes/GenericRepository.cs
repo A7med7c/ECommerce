@@ -40,6 +40,14 @@ namespace ECommerce.DAL.Repositories.Classes
             return query.FirstOrDefault(e => e.Id == id && !e.IsDeleted);
         }
 
+        public Task<TEntity?> GetByIdAsync(int id, params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Table;
+            foreach (var include in includes)
+                query = query.Include(include);
+            return query.FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+        }
+
         public void Add(TEntity entity)
             => Table.Add(entity);
 

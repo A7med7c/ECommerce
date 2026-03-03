@@ -16,6 +16,9 @@ namespace ECommerce.DAL.Repositories.Interfaces
 
         TEntity? GetById(int id, params Expression<Func<TEntity, object>>[] includes);
 
+        /// <summary>Asynchronously finds a non-deleted entity by its primary key.</summary>
+        Task<TEntity?> GetByIdAsync(int id, params Expression<Func<TEntity, object>>[] includes);
+
         void Add(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);   // soft delete via IsDeleted flag

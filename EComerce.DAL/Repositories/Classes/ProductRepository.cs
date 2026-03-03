@@ -4,11 +4,10 @@ using ECommerce.DAL.Repositories.Interfaces;
 
 namespace ECommerce.DAL.Repositories.Classes
 {
-    public class ProductRepository(ApplicationDbContext _dbContext) : GenericRepository<Product>(_dbContext), IProductRepository
+    public class ProductRepository(ApplicationDbContext dbContext)
+        : GenericRepository<Product>(dbContext), IProductRepository
     {
         public bool SKUExists(string sku, int? id = null)
-        {
-            return _dbContext.Products.Any(p => p.SKU == sku && (!id.HasValue || p.Id != id));
-        }
+            => Table.Any(p => p.SKU == sku && (!id.HasValue || p.Id != id));
     }
 }

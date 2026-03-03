@@ -1,87 +1,59 @@
-﻿using ECommerce.BLL.Services.Interfaces;
+using AutoMapper;
+using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Product;
 using ECommerce.DAL.Entities;
 using ECommerce.DAL.Repositories.Interfaces;
 
 namespace ECommerce.BLL.Services.Classes
 {
-    public class ProductService(IProductRepository _repository) : IProductService
+    public class ProductService(IUnitOfWork _unitOfWork, IMapper _mapper) : IProductService
     {
-
         public IEnumerable<ProductsVM> GetProducts()
         {
-            var products = _repository.GetAll(p => p.Category);
-            return products.Select(p => new ProductsVM
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                CategoryName = p.Category.Name
-            });
+            var products = _unitOfWork.Products.GetAll(p => p.Category);
+            return _mapper.Map<IEnumerable<ProductsVM>>(products);
         }
+
         public ProductDetailsVM? GetProduct(int id)
         {
-            var product = _repository.GetById(id, p => p.Category);
-            if (product is null) return null;
-            return new ProductDetailsVM
-            {
-                Id = product.Id,
-                Name = product.Name,
-                SKU = product.SKU,
-                Price = product.Price,
-                StockQuantity = product.StockQuantity,
-                IsActive = product.IsActive,
-                CategoryId = product.CategoryId,
-                CategoryName = product.Category.Name
-            };
+            var product = _unitOfWork.Products.GetById(id, p => p.Category);
+            return product is null ? null : _mapper.Map<ProductDetailsVM>(product);
         }
 
         public bool AddProduct(ProductCreateUpdateVM vm)
         {
-            if (_repository.SKUExists(vm.SKU))
+            if (_unitOfWork.Products.SKUExists(vm.SKU))
                 return false;
-            var product = new Product
-            {
-                Name = vm.Name,
-                SKU = vm.SKU,
-                Price = vm.Price,
-                StockQuantity = vm.StockQuantity,
-                IsActive = vm.IsActive,
-                CategoryId = vm.CategoryId,
-                CreatedOn = DateTime.UtcNow
-            };
 
-            if (_repository.Add(product) > 0)
-                return true;
-            return false;
+            var product = _mapper.Map<Product>(vm);
+            product.CreatedOn = DateTime.UtcNow;
+
+            _unitOfWork.Products.Add(product);
+            return _unitOfWork.Complete() > 0;
         }
 
         public bool UpdateProduct(ProductCreateUpdateVM vm)
         {
-            var product = _repository.GetById(vm.Id!.Value);
+            var product = _unitOfWork.Products.GetById(vm.Id!.Value);
             if (product is null) return false;
 
-            if (_repository.SKUExists(vm.SKU, vm.Id))
+            if (_unitOfWork.Products.SKUExists(vm.SKU, vm.Id))
                 return false;
 
-            product.Name = vm.Name;
-            product.SKU = vm.SKU;
-            product.Price = vm.Price;
-            product.StockQuantity = vm.StockQuantity;
-            product.IsActive = vm.IsActive;
-            product.CategoryId = vm.CategoryId;
+            _mapper.Map(vm, product);
             product.ModifiedOn = DateTime.UtcNow;
 
-            return _repository.Update(product) > 0;
+            _unitOfWork.Products.Update(product);
+            return _unitOfWork.Complete() > 0;
         }
 
         public bool DeleteProduct(int id)
         {
-            var product = _repository.GetById(id);
+            var product = _unitOfWork.Products.GetById(id);
             if (product is null) return false;
 
-            product.IsDeleted = true;
-            return _repository.Update(product) > 0 ? true : false;
+            _unitOfWork.Products.Delete(product);
+            return _unitOfWork.Complete() > 0;
         }
     }
 }

@@ -19,14 +19,14 @@ namespace ECommerce.DAL.Repositories.Classes
             Products = new ProductRepository(_context);
             Addresses = new AddressRepository(_context);
             Orders = new OrderRepository(_context);
-            OrderItems = new OrderItemRepository(_context);
+            Favorites = new FavoriteRepository(_context);
         }
 
         public ICategoryRepository Categories { get; private set; }
         public IProductRepository Products { get; private set; }
         public IAddressRepository Addresses { get; private set; }
         public IOrderRepository Orders { get; private set; }
-        public IOrderItemRepository OrderItems { get; private set; }
+        public IFavoriteRepository Favorites { get; private set; }
 
         public int Complete() => _context.SaveChanges();
         public Task<int> CompleteAsync() => _context.SaveChangesAsync();

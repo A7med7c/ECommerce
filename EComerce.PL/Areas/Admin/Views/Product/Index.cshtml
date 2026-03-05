@@ -4,35 +4,42 @@
     ViewData["Title"] = "Admin - Products";
 }
 
-<div class="d-flex align-items-center justify-content-between mb-3">
-    <h2 class="mb-0">
-        <i class="fa-solid fa-boxes-stacked me-2 text-primary"></i>Products
-    </h2>
+<!-- Page Header -->
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="section-title mb-1">
+            <i class="fa-solid fa-boxes-stacked me-2" style="color:var(--shop-primary)"></i>Products
+        </h2>
+        <p class="section-subtitle mb-0">Manage your product catalog</p>
+    </div>
     <a asp-area="Admin" asp-action="Create" class="btn btn-primary">
-        <i class="fa-solid fa-plus me-1"></i>Create New
+        <i class="fa-solid fa-plus me-1"></i>Add Product
     </a>
 </div>
 
-<!-- Search / filter bar -->
-<div class="card shadow-sm border-0 mb-3">
-    <div class="card-body py-2">
+<!-- Search & Filter Bar -->
+<div class="card mb-4">
+    <div class="card-body py-3">
         <form asp-area="Admin" asp-action="Index" method="get" class="row g-2 align-items-end">
             <div class="col-sm-5">
+                <label class="form-label text-muted small mb-1">Search</label>
                 <div class="input-group">
                     <input type="text" name="q" value="@Model.Q" class="form-control"
                            placeholder="Search by name or SKU..." />
-                    <button class="btn btn-outline-secondary" type="submit">
+                    <button class="btn btn-primary" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </div>
             </div>
             <div class="col-sm-3">
+                <label class="form-label text-muted small mb-1">Category</label>
                 <select name="categoryId" class="form-select" onchange="this.form.submit()"
                         asp-items="@(new SelectList(Model.Categories, nameof(CategoryFilterVM.Id), nameof(CategoryFilterVM.Name), Model.CategoryId))">
                     <option value="">All Categories</option>
                 </select>
             </div>
             <div class="col-sm-2">
+                <label class="form-label text-muted small mb-1">Sort</label>
                 <select name="sort" class="form-select" onchange="this.form.submit()"
                         asp-items="@(new SelectList(new[]
                         {
@@ -45,7 +52,8 @@
             @if (!string.IsNullOrEmpty(Model.Q) || Model.CategoryId.HasValue)
             {
                 <div class="col-sm-2">
-                    <a asp-area="Admin" asp-action="Index" class="btn btn-outline-danger w-100">
+                    <label class="form-label text-muted small mb-1">&nbsp;</label>
+                    <a asp-area="Admin" asp-action="Index" class="btn btn-outline-danger w-100 d-block">
                         <i class="fa-solid fa-xmark me-1"></i>Clear
                     </a>
                 </div>
@@ -54,79 +62,97 @@
     </div>
 </div>
 
-<p class="text-muted small">
+<p class="text-muted small mb-3">
     Showing <strong>@Model.Products.Count</strong> of <strong>@Model.TotalCount</strong> products
 </p>
 
 @if (Model.Products.Any())
 {
-    <div class="table-responsive">
-        <table class="table table-hover table-bordered align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th style="width:60px">Image</th>
-                    <th>Name</th>
-                    <th>SKU</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Category</th>
-                    <th>Active</th>
-                    <th class="text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Products)
-                {
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
                     <tr>
-                        <td>
-                            @if (!string.IsNullOrEmpty(item.ImageUrl))
-                            {
-                                <img src="@item.ImageUrl" alt="@item.Name"
-                                     class="rounded object-fit-cover" style="width:50px;height:50px" />
-                            }
-                            else
-                            {
-                                <div class="bg-light rounded d-flex align-items-center justify-content-center"
-                                     style="width:50px;height:50px">
-                                    <i class="fa-solid fa-image text-muted"></i>
-                                </div>
-                            }
-                        </td>
-                        <td class="fw-semibold">@item.Name</td>
-                        <td><span class="badge bg-light text-dark border">@item.SKU</span></td>
-                        <td class="text-success fw-bold">@item.Price.ToString("C")</td>
-                        <td>@item.StockQuantity</td>
-                        <td>@item.CategoryName</td>
-                        <td>
-                            <span class="badge @(item.IsActive ? "bg-success" : "bg-secondary")">
-                                @(item.IsActive ? "Yes" : "No")
-                            </span>
-                        </td>
-                        <td class="text-center text-nowrap">
-                            <a asp-area="Admin" asp-action="Details" asp-route-id="@item.Id"
-                               class="btn btn-info btn-sm">
-                                <i class="fa-solid fa-circle-info me-1"></i>Details
-                            </a>
-                            <a asp-area="Admin" asp-action="Edit" asp-route-id="@item.Id"
-                               class="btn btn-warning btn-sm">
-                                <i class="fa-solid fa-pen-to-square me-1"></i>Edit
-                            </a>
-                            <button type="button" class="btn btn-danger btn-sm delete-btn"
-                                    data-id="@item.Id"
-                                    data-message="Product &lsquo;@item.Name&rsquo; will be permanently deleted!">
-                                <i class="fa-solid fa-trash me-1"></i>Delete
-                            </button>
-                        </td>
+                        <th class="ps-4" style="width:60px">Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th class="text-center">Stock</th>
+                        <th class="text-center">Active</th>
+                        <th class="text-center pe-4">Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Products)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.Name" class="admin-img" />
+                                }
+                                else
+                                {
+                                    <div class="admin-img-placeholder">
+                                        <i class="fa-solid fa-image"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <p class="fw-semibold mb-0" style="font-size:.875rem">@item.Name</p>
+                                <span class="text-muted" style="font-size:.75rem">@item.SKU</span>
+                            </td>
+                            <td>
+                                <span class="cat-badge">@item.CategoryName</span>
+                            </td>
+                            <td class="fw-bold" style="color:var(--shop-primary)">@item.Price.ToString("C")</td>
+                            <td class="text-center">
+                                <span class="badge @(item.StockQuantity > 0 ? "bg-light text-dark border" : "bg-warning text-dark")"
+                                      style="font-size:.75rem">
+                                    @item.StockQuantity
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                @if (item.IsActive)
+                                {
+                                    <span class="badge" style="background:#f0fdf4; color:#15803d; font-size:.75rem">
+                                        <i class="fa-solid fa-check me-1"></i>Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge" style="background:#f1f5f9; color:#6b7280; font-size:.75rem">
+                                        <i class="fa-solid fa-xmark me-1"></i>Inactive
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-center pe-4 text-nowrap">
+                                <a asp-area="Admin" asp-action="Details" asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-outline-secondary me-1" title="Details">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </a>
+                                <a asp-area="Admin" asp-action="Edit" asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-outline-primary me-1" title="Edit">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
+                                        data-id="@item.Id"
+                                        data-message="Product &lsquo;@item.Name&rsquo; will be permanently deleted!"
+                                        title="Delete">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Pagination -->
     @if (Model.TotalPages > 1)
     {
-        <nav aria-label="Page navigation">
+        <nav class="mt-4" aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
                     <a class="page-link" asp-area="Admin" asp-action="Index"
@@ -159,7 +185,10 @@
 }
 else
 {
-    <div class="alert alert-info">No products found.</div>
+    <div class="alert alert-info d-flex align-items-center gap-2">
+        <i class="fa-solid fa-circle-info fa-lg"></i>
+        <span>No products found.</span>
+    </div>
 }
 
 <form id="deleteForm" asp-area="Admin" asp-action="Delete" method="post">

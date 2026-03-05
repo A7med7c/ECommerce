@@ -1,15 +1,19 @@
-@model ECommerce.PL.ViewModels.RegisterVM
+﻿@model ECommerce.PL.ViewModels.RegisterVM
 
 @{
     ViewData["Title"] = "Create Account";
 }
 
 <div class="row justify-content-center mt-4">
-    <div class="col-md-6">
+    <div class="col-md-6 col-lg-5">
 
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-success text-white text-center py-3">
-                <h4 class="mb-0"><i class="fa-solid fa-user-plus me-2"></i>Create Account</h4>
+        <div class="auth-card card">
+            <div class="auth-header success-header">
+                <div class="mb-2" style="font-size:2rem">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h4 class="mb-0 fw-bold">Create Account</h4>
+                <p class="mb-0 mt-1" style="font-size:.875rem; opacity:.85">Join ShopZone today</p>
             </div>
             <div class="card-body p-4">
 
@@ -18,43 +22,45 @@
                 <form asp-action="Register" method="post">
 
                     <div class="mb-3">
-                        <label asp-for="FullName" class="form-label"></label>
-                        <input asp-for="FullName" class="form-control" placeholder="Ahmed Ragab" />
+                        <label asp-for="FullName" class="form-label">Full name</label>
+                        <input asp-for="FullName" class="form-control" placeholder="Your full name" />
                         <span asp-validation-for="FullName" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label"></label>
+                        <label asp-for="Email" class="form-label">Email address</label>
                         <input asp-for="Email" class="form-control" placeholder="you@example.com"
                                autocomplete="username" />
                         <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control" placeholder="Min 8 chars"
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password" class="form-control" placeholder="Min 8 characters"
                                autocomplete="new-password" />
                         <span asp-validation-for="Password" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-4">
-                        <label asp-for="ConfirmPassword" class="form-label"></label>
-                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat password"
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm password</label>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat your password"
                                autocomplete="new-password" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                     </div>
 
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fa-solid fa-user-plus me-2"></i>Register
+                        <button type="submit" class="btn btn-lg" style="background:#059669; border-color:#059669; color:#fff">
+                            <i class="fa-solid fa-user-plus me-2"></i>Create Account
                         </button>
                     </div>
                 </form>
 
             </div>
-            <div class="card-footer text-center text-muted">
-                Already have an account?
-                <a asp-action="Login" class="fw-semibold">Sign in</a>
+            <div class="card-footer text-center py-3" style="background:#f8fafc">
+                <span class="text-muted small">
+                    Already have an account?
+                    <a asp-action="Login" class="fw-semibold" style="color:var(--shop-primary)">Sign in</a>
+                </span>
             </div>
         </div>
 

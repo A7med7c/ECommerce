@@ -1,15 +1,19 @@
-@model ECommerce.PL.ViewModels.LoginVM
+﻿@model ECommerce.PL.ViewModels.LoginVM
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Sign In";
 }
 
 <div class="row justify-content-center mt-4">
-    <div class="col-md-5">
+    <div class="col-md-5 col-lg-4">
 
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary text-white text-center py-3">
-                <h4 class="mb-0"><i class="fa-solid fa-right-to-bracket me-2"></i>Sign In</h4>
+        <div class="auth-card card">
+            <div class="auth-header">
+                <div class="mb-2" style="font-size:2rem">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                <h4 class="mb-0 fw-bold">Welcome back</h4>
+                <p class="mb-0 mt-1" style="font-size:.875rem; opacity:.85">Sign in to your account</p>
             </div>
             <div class="card-body p-4">
 
@@ -19,35 +23,37 @@
                     <input type="hidden" asp-for="ReturnUrl" />
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label"></label>
+                        <label asp-for="Email" class="form-label">Email address</label>
                         <input asp-for="Email" class="form-control" placeholder="you@example.com"
                                autocomplete="username" />
                         <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control" placeholder="••••••••"
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password" class="form-control" placeholder="Enter your password"
                                autocomplete="current-password" />
                         <span asp-validation-for="Password" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-4 form-check">
                         <input asp-for="RememberMe" class="form-check-input" />
-                        <label asp-for="RememberMe" class="form-check-label"></label>
+                        <label asp-for="RememberMe" class="form-check-label text-muted small"></label>
                     </div>
 
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fa-solid fa-right-to-bracket me-2"></i>Login
+                            <i class="fa-solid fa-right-to-bracket me-2"></i>Sign In
                         </button>
                     </div>
                 </form>
 
             </div>
-            <div class="card-footer text-center text-muted">
-                Don't have an account?
-                <a asp-action="Register" class="fw-semibold">Create one</a>
+            <div class="card-footer text-center py-3" style="background:#f8fafc">
+                <span class="text-muted small">
+                    Don&apos;t have an account?
+                    <a asp-action="Register" class="fw-semibold" style="color:var(--shop-primary)">Create one</a>
+                </span>
             </div>
         </div>
 

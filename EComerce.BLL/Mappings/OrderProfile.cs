@@ -17,8 +17,24 @@ namespace ECommerce.BLL.Mappings
                     opt => opt.MapFrom(src =>
                         src.ShippingAddress != null ? src.ShippingAddress.City : string.Empty));
 
+            // ── Order → AdminOrdersVM (includes user info for admin list) ──
+            CreateMap<Order, AdminOrdersVM>()
+                .ForMember(dest => dest.Status,
+                    opt => opt.MapFrom(src => ((OrderStatus)src.Status).ToString()))
+                .ForMember(dest => dest.ShippingCity,
+                    opt => opt.MapFrom(src =>
+                        src.ShippingAddress != null ? src.ShippingAddress.City : string.Empty))
+                .ForMember(dest => dest.UserEmail,
+                    opt => opt.MapFrom(src =>
+                        src.User != null ? src.User.Email : string.Empty))
+                .ForMember(dest => dest.UserFullName,
+                    opt => opt.MapFrom(src =>
+                        src.User != null ? src.User.FullName : string.Empty));
+
             // ── Order → OrderDetailsVM ────────────────────────────────────
             CreateMap<Order, OrderDetailsVM>()
+                .ForMember(dest => dest.StatusValue,
+                    opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.Status,
                     opt => opt.MapFrom(src => ((OrderStatus)src.Status).ToString()))
                 .ForMember(dest => dest.ShippingCountry,

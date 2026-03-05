@@ -6,6 +6,7 @@ namespace ECommerce.BLL.ViewModels.Order
         public int Id { get; set; }
         public string OrderNumber { get; set; } = null!;
         public string Status { get; set; } = null!;
+        public int StatusValue { get; set; }        // raw int for status-update form
         public DateTime OrderDate { get; set; }
         public decimal TotalAmount { get; set; }
 

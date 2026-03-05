@@ -13,7 +13,7 @@ namespace ECommerce.DAL.Repositories.Interfaces
         IProductRepository Products { get; }
         IAddressRepository Addresses { get; }
         IOrderRepository Orders { get; }
-        IOrderItemRepository OrderItems { get; }
+        IFavoriteRepository Favorites { get; }
 
         /// <summary>Synchronously persists all staged changes. Returns rows affected.</summary>
         int Complete();

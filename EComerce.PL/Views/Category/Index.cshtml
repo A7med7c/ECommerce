@@ -32,23 +32,18 @@
                     <td class="text-center">
 
                         <!-- Details -->
-                        <a class="btn btn-sm btn-primary"
-                           asp-action="Details"
-                           asp-route-id="@category.Id">
+                        <a class="btn btn-sm btn-primary"                         asp-action="Details"   asp-route-id="@category.Id">
                             <i class="fa-solid fa-circle-info"></i>
                         </a>
 
                         <!-- Update -->
-                        <a class="btn btn-sm btn-success"
-                           asp-action="Edit"
-                           asp-route-id="@category.Id">
+                        <a class="btn btn-sm btn-success"              asp-action="Edit"                 asp-route-id="@category.Id">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </a>
 
                         <!-- Delete -->
-                        <a href="#"
-                           class="btn btn-sm btn-danger delete-btn"
-                           data-id="@category.Id">
+                        <a href="#"   class="btn btn-sm btn-danger delete-btn"      data-id="@category.Id"
+                               data-message="Category &lsquo;@category.Name&rsquo; will be permanently deleted!">
                             <i class="fa-solid fa-trash"></i>
                         </a>
 
@@ -69,66 +64,3 @@ else
     @Html.AntiForgeryToken()
     <input type="hidden" name="id" id="deleteId" />
 </form>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: '@TempData["SuccessMessage"]',
-                confirmButtonColor: '#3085d6'
-            });
-        });
-    </script>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '@TempData["ErrorMessage"]',
-                confirmButtonColor: '#d33'
-            });
-        });
-    </script>
-}
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-        document.querySelectorAll(".delete-btn").forEach(button => {
-
-            button.addEventListener("click", function (e) {
-
-                e.preventDefault();
-
-                const id = this.getAttribute("data-id");
-
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "This category will be deleted!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#6c757d",
-                    confirmButtonText: "Yes, delete it!"
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-                        document.getElementById("deleteId").value = id;
-                        document.getElementById("deleteForm").submit();
-                    }
-
-                });
-
-            });
-
-        });
-
-    });
-</script>

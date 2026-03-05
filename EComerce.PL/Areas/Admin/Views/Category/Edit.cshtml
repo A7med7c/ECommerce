@@ -1,28 +1,28 @@
-﻿@model UpdateCategoryVM
+@model UpdateCategoryVM
 
 @{
-    ViewData["Title"] = "Edit Category";
+    ViewData["Title"] = "Admin – Edit Category";
 }
 
 <div class="row justify-content-center mt-4">
     <div class="col-6">
 
-        <h2 class="mb-4">Edit Category</h2>
+        <h2 class="mb-4">
+            <i class="fa-solid fa-pen-to-square me-2 text-warning"></i>Edit Category
+        </h2>
 
-        <form asp-action="Edit" asp-route-id="@Model.CategoryId" method="post">
+        <form asp-area="Admin" asp-action="Edit" asp-route-id="@Model.CategoryId" method="post">
 
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
 
             <input type="hidden" asp-for="CategoryId" />
 
-            <!-- Name -->
             <div class="mb-3">
                 <label asp-for="Name" class="form-label"></label>
                 <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <span asp-validation-for="Name" class="text-danger small"></span>
             </div>
 
-            <!-- Parent Category -->
             <div class="mb-3">
                 <label asp-for="ParentCategoryId" class="form-label">Parent Category</label>
                 <select asp-for="ParentCategoryId"
@@ -32,16 +32,14 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-warning">
                 <i class="fa-solid fa-pen-to-square me-1"></i>Update
             </button>
-
-            <a asp-action="Index" class="btn btn-outline-secondary">
+            <a asp-area="Admin" asp-action="Index" class="btn btn-outline-secondary">
                 <i class="fa-solid fa-arrow-left me-1"></i>Back
             </a>
 
         </form>
-
     </div>
 </div>
 

@@ -1,5 +1,9 @@
 ﻿@model AddCategoryVM
 
+@{
+    ViewData["Title"] = "Create Category";
+}
+
 <div class="row justify-content-center mt-4">
 
     <div class="col-6">
@@ -8,45 +12,31 @@
 
         <form asp-action="Create" method="post">
 
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
             <!-- Name -->
             <div class="mb-3">
                 <label asp-for="Name" class="form-label"></label>
                 <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name"
-                      class="text-danger"></span>
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <!-- Parent Category -->
             <div class="mb-3">
-                <label class="form-label">
-                    Parent Category
-                </label>
-
+                <label asp-for="ParentCategoryId" class="form-label">Parent Category</label>
                 <select asp-for="ParentCategoryId"
+                        asp-items="@(new SelectList(Model.ParentCategories, nameof(CategoriesVM.Id), nameof(CategoriesVM.Name)))"
                         class="form-select">
-
-                    <option value="">
-                        -- Main Category --
-                    </option>
-
-                    @foreach (var category in Model.ParentCategories)
-                    {
-                        <option value="@category.Id">
-                            @category.Name
-                        </option>
-                    }
-
+                    <option value="">-- Main Category --</option>
                 </select>
             </div>
 
-            <button type="submit"
-                    class="btn btn-primary">
-                Create
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-plus me-1"></i>Create
             </button>
 
-            <a asp-action="Index"
-               class="btn btn-outline-secondary">
-                Back
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrow-left me-1"></i>Back
             </a>
 
         </form>
@@ -54,3 +44,7 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -14,6 +14,8 @@ namespace ECommerce.DAL.Repositories.Classes
     {
         protected DbSet<TEntity> Table => _dbContext.Set<TEntity>();
 
+        // ── Sync ──────────────────────────────────────────────────────────
+
         public IEnumerable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes)
         {
             IQueryable<TEntity> query = Table.Where(e => !e.IsDeleted);
@@ -40,6 +42,27 @@ namespace ECommerce.DAL.Repositories.Classes
             return query.FirstOrDefault(e => e.Id == id && !e.IsDeleted);
         }
 
+        // ── Async ─────────────────────────────────────────────────────────
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync(
+            params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Table.Where(e => !e.IsDeleted);
+            foreach (var include in includes)
+                query = query.Include(include);
+            return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<TEntity>> FindAsync(
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Table.Where(e => !e.IsDeleted).Where(predicate);
+            foreach (var include in includes)
+                query = query.Include(include);
+            return await query.ToListAsync();
+        }
+
         public Task<TEntity?> GetByIdAsync(int id, params Expression<Func<TEntity, object>>[] includes)
         {
             IQueryable<TEntity> query = Table;
@@ -48,8 +71,19 @@ namespace ECommerce.DAL.Repositories.Classes
             return query.FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
         }
 
+        public IQueryable<TEntity> Query(params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Table.Where(e => !e.IsDeleted).AsNoTracking();
+            foreach (var include in includes)
+                query = query.Include(include);
+            return query;
+        }
+
         public void Add(TEntity entity)
             => Table.Add(entity);
+
+        public Task AddAsync(TEntity entity)
+            => Table.AddAsync(entity).AsTask();
 
         public void Update(TEntity entity)
             => Table.Update(entity);

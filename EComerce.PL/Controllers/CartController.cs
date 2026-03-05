@@ -18,9 +18,10 @@ namespace ECommerce.PL.Controllers
         }
 
         // ── POST /Cart/Add ───────────────────────────────────────────────────
-        /// <summary>Add a product to the cart from any catalog/detail page.</summary>
+        /// <summary>Add a product to the cart. Requires authentication.</summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> Add(int productId, int quantity = 1)
         {
             var (success, message) = await _cartService.AddToCartAsync(productId, quantity);

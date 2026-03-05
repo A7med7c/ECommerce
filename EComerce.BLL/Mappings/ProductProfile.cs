@@ -20,7 +20,8 @@ namespace ECommerce.BLL.Mappings
 
             // Used when pre-populating the edit form
             CreateMap<Product, ProductCreateUpdateVM>()
-                .ForMember(dest => dest.Categories, opt => opt.Ignore());
+                .ForMember(dest => dest.Categories, opt => opt.Ignore())
+                .ForMember(dest => dest.ImageFile, opt => opt.Ignore());
 
             // ── ViewModel → Entity ────────────────────────────────────────
 
@@ -29,6 +30,7 @@ namespace ECommerce.BLL.Mappings
                     opt => opt.MapFrom(src => src.Id ?? 0))
                 .ForMember(dest => dest.Category, opt => opt.Ignore())
                 .ForMember(dest => dest.OrderItems, opt => opt.Ignore())
+                .ForMember(dest => dest.Favorites, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedOn, opt => opt.Ignore())
                 .ForMember(dest => dest.ModifiedOn, opt => opt.Ignore())
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())

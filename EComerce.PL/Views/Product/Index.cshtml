@@ -30,23 +30,20 @@
                         <td class="text-success fw-bold">@item.Price.ToString("C")</td>
                         <td>@item.CategoryName</td>
                         <td class="text-center text-nowrap">
-                            <a asp-action="Details" asp-route-id="@item.Id"
-                               class="btn btn-info btn-sm">
+                            <a asp-action="Details" asp-route-id="@item.Id"                              class="btn btn-info btn-sm">
                                 <i class="fa-solid fa-circle-info me-1"></i>Details
                             </a>
-                            <a asp-action="Edit" asp-route-id="@item.Id"
-                               class="btn btn-warning btn-sm">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
                                 <i class="fa-solid fa-pen-to-square me-1"></i>Edit
                             </a>
-                            <button type="button" class="btn btn-danger btn-sm delete-btn"
-                                    data-id="@item.Id">
+                            <button type="button" class="btn btn-danger btn-sm delete-btn"             data-id="@item.Id"
+                                    data-message="Product &lsquo;@item.Name&rsquo; will be permanently deleted!">
                                 <i class="fa-solid fa-trash me-1"></i>Delete
                             </button>
-                            <form asp-controller="Cart" asp-action="Add"
-                                  method="post" class="d-inline">
+                            <form asp-controller="Cart" asp-action="Add"    method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="productId" value="@item.Id" />
-                                <input type="hidden" name="quantity"   value="1" />
+                                <input type="hidden" name="quantity" value="1" />
                                 <button type="submit" class="btn btn-success btn-sm" title="Add to Cart">
                                     <i class="fa-solid fa-cart-plus me-1"></i>Add
                                 </button>

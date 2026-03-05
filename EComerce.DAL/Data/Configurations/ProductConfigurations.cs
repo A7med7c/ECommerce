@@ -26,6 +26,14 @@ namespace EComerce.DAL.Data.Configurations
                      builder.Property(p => p.Price)
                             .HasColumnType("decimal(18,2)");
 
+                     builder.Property(p => p.Description)
+                            .HasColumnType("nvarchar(2000)")
+                            .IsRequired(false);
+
+                     builder.Property(p => p.ImageUrl)
+                            .HasColumnType("varchar(500)")
+                            .IsRequired(false);
+
                      builder.Property(p => p.StockQuantity)
                             .HasDefaultValue(0);
 

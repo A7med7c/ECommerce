@@ -1,0 +1,60 @@
+@model ProductCreateUpdateVM
+
+<div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="SKU" class="form-label"></label>
+    <input asp-for="SKU" class="form-control" />
+    <span asp-validation-for="SKU" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Price" class="form-label"></label>
+    <input asp-for="Price" class="form-control" />
+    <span asp-validation-for="Price" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="StockQuantity" class="form-label"></label>
+    <input asp-for="StockQuantity" class="form-control" />
+    <span asp-validation-for="StockQuantity" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Description" class="form-label">Description</label>
+    <textarea asp-for="Description" class="form-control" rows="4"
+              placeholder="Optional product description..."></textarea>
+    <span asp-validation-for="Description" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="ImageFile" class="form-label">Product Image</label>
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="mb-2">
+            <img src="@Model.ImageUrl" alt="Current image"                 class="rounded border object-fit-cover"
+                 style="height:120px;width:120px" />
+            <p class="text-muted small mt-1">Current image — upload a new one to replace it.</p>
+        </div>
+    }
+    <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp,.gif" />
+    <div class="form-text">Max 5 MB. Allowed: JPG, PNG, WebP, GIF.</div>
+    <span asp-validation-for="ImageFile" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="CategoryId" class="form-label">Category</label>
+    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
+        <option value="">-- Select Category --</option>
+    </select>
+    <span asp-validation-for="CategoryId" class="text-danger small"></span>
+</div>
+
+<div class="form-check mb-3">
+    <input asp-for="IsActive" class="form-check-input" />
+    <label asp-for="IsActive" class="form-check-label"></label>
+</div>

@@ -1,27 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-public class ProductCreateUpdateVM
+namespace ECommerce.BLL.ViewModels.Product
 {
-    public int? Id { get; set; }
+    public class ProductCreateUpdateVM
+    {
+        public int? Id { get; set; }
 
-    [Required]
-    public string Name { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
-    [Required]
-    public string SKU { get; set; } = null!;
+        public string SKU { get; set; } = null!;
 
-    [Range(0.01, double.MaxValue)]
-    public decimal Price { get; set; }
+        [Display(Name = "Description")]
+        public string? Description { get; set; }
 
-    [Range(0, int.MaxValue)]
-    public int StockQuantity { get; set; }
+        public decimal Price { get; set; }
 
-    public bool IsActive { get; set; }
+        [Display(Name = "Stock Quantity")]
+        public int StockQuantity { get; set; }
 
-    [Required]
-    public int CategoryId { get; set; }
+        public bool IsActive { get; set; }
 
-    public IEnumerable<SelectListItem> Categories { get; set; }
-        = new List<SelectListItem>();
+        [Display(Name = "Category")]
+        public int CategoryId { get; set; }
+
+        // Image (only for upload; not mapped to DB directly)
+        [Display(Name = "Product Image")]
+        public IFormFile? ImageFile { get; set; }
+
+        /// <summary>Relative path stored in DB, e.g. /images/products/abc.jpg</summary>
+        public string? ImageUrl { get; set; }
+
+        public IEnumerable<SelectListItem> Categories { get; set; }
+            = new List<SelectListItem>();
+    }
 }

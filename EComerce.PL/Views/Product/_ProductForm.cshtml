@@ -1,34 +1,32 @@
 ﻿@model ProductCreateUpdateVM
 
-<div class="form-group mb-3">
-    <label asp-for="Name"></label>
+<div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
     <input asp-for="Name" class="form-control" />
     <span asp-validation-for="Name" class="text-danger"></span>
 </div>
 
-<div class="form-group mb-3">
-    <label asp-for="SKU"></label>
+<div class="mb-3">
+    <label asp-for="SKU" class="form-label"></label>
     <input asp-for="SKU" class="form-control" />
     <span asp-validation-for="SKU" class="text-danger"></span>
 </div>
 
-<div class="form-group mb-3">
-    <label asp-for="Price"></label>
+<div class="mb-3">
+    <label asp-for="Price" class="form-label"></label>
     <input asp-for="Price" class="form-control" />
     <span asp-validation-for="Price" class="text-danger"></span>
 </div>
 
-<div class="form-group mb-3">
-    <label asp-for="StockQuantity"></label>
+<div class="mb-3">
+    <label asp-for="StockQuantity" class="form-label"></label>
     <input asp-for="StockQuantity" class="form-control" />
     <span asp-validation-for="StockQuantity" class="text-danger"></span>
 </div>
 
-<div class="form-group mb-3">
-    <label asp-for="CategoryId">Category Name</label>
-    <select asp-for="CategoryId"
-            asp-items="Model.Categories"
-            class="form-control">
+<div class="mb-3">
+    <label asp-for="CategoryId" class="form-label">Category</label>
+    <select asp-for="CategoryId"            asp-items="Model.Categories" class="form-select">
         <option value="">-- Select Category --</option>
     </select>
     <span asp-validation-for="CategoryId" class="text-danger"></span>
@@ -38,38 +36,3 @@
     <input asp-for="IsActive" class="form-check-input" />
     <label asp-for="IsActive" class="form-check-label"></label>
 </div>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: '@TempData["SuccessMessage"]',
-                confirmButtonColor: '#3085d6'
-            });
-        });
-    </script>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '@TempData["ErrorMessage"]',
-                confirmButtonColor: '#d33'
-            });
-        });
-    </script>
-}
-
-@section Scripts{
-<a href="~/lib/jquery/dist/jquery.min.map">~/lib/jquery/dist/jquery.min.map</a>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-}

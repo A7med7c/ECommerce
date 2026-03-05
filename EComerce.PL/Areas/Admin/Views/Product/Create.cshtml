@@ -1,0 +1,28 @@
+@model ProductCreateUpdateVM
+
+@{
+    ViewData["Title"] = "Admin – Create Product";
+}
+
+<h2 class="mb-4">
+    <i class="fa-solid fa-plus me-2 text-primary"></i>Create Product
+</h2>
+
+<form asp-area="Admin" asp-action="Create" method="post" enctype="multipart/form-data">
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+
+    <partial name="_ProductForm" model="Model" />
+
+    <button type="submit" class="btn btn-success">
+        <i class="fa-solid fa-floppy-disk me-1"></i>Save
+    </button>
+    <a asp-area="Admin" asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-xmark me-1"></i>Cancel
+    </a>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

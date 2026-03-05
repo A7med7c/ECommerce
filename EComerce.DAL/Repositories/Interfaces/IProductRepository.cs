@@ -4,6 +4,7 @@ namespace ECommerce.DAL.Repositories.Interfaces
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        public bool SKUExists(string sku, int? id = null);
+        bool SKUExists(string sku, int? id = null);
+        Task<bool> SKUExistsAsync(string sku, int? id = null);
     }
 }

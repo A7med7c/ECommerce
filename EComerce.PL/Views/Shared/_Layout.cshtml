@@ -1,98 +1,331 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EComerce.PL</title>
+    <title>@ViewData["Title"] - ShopZone</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EComerce.PL.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
-            integrity="sha256-H4E+lEH05GVDCnvOHJEmpX9oe3l+hAK7Nq1vr7VO7fI="            crossorigin="anonymous"></script>
+            integrity="sha256-H4E+lEH05GVDCnvOHJEmpX9oe3l+hAK7Nq1vr7VO7fI="
+            crossorigin="anonymous"></script>
 </head>
 <body>
+
+    <!-- NAVBAR -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Shopify</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg sticky-top">
+            <div class="container">
+
+                <!-- Brand -->
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fa-solid fa-bag-shopping me-1"></i>Shop<span class="brand-dot">Zone</span>
+                </a>
+
+                <!-- Mobile toggle -->
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+
+                    <!-- Left nav links: Home, Products, Categories, Support -->
+                    <ul class="navbar-nav me-3 mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fa-solid fa-house me-1"></i>Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home"
-                               asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Catalog" asp-action="Index">
+                                <i class="fa-solid fa-shop me-1"></i>Products
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-tags me-1"></i>Categories
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Catalog" asp-action="Index">
+                                        <i class="fa-solid fa-border-all me-2 text-muted"></i>All Products
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Catalog"
+                                       asp-action="Index" asp-route-sort="newest">
+                                        <i class="fa-solid fa-star me-2 text-warning"></i>New Arrivals
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Catalog"
+                                       asp-action="Index" asp-route-sort="price_asc">
+                                        <i class="fa-solid fa-arrow-trend-down me-2 text-success"></i>Best Deals
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Category"
-                               asp-action="Index">Categories</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product"
-                               asp-action="Index">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Order"
-                               asp-action="Index">Orders</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark position-relative" asp-controller="Cart" asp-action="Index"
-                                   title="Shopping Cart">
-                                <i class="fa-solid fa-cart-shopping fa-lg"></i>
-                                <span id="cart-badge"
-                                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
-                                      style="font-size:.65rem;display:none">0</span>
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#supportModal">
+                                <i class="fa-solid fa-headset me-1"></i>Support
                             </a>
                         </li>
                     </ul>
+
+                    <!-- Center: Search bar -->
+                    <form class="navbar-search d-flex flex-grow-1 mx-2"
+                          asp-area="" asp-controller="Catalog" asp-action="Index" method="get">
+                        <div class="input-group">
+                            <input type="search" name="q" class="form-control"
+                                   placeholder="Search products..." aria-label="Search products" />
+                            <button class="btn" type="submit" aria-label="Search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Right icons: My Orders, Admin, Favorites, Cart, User -->
+                    <ul class="navbar-nav ms-2 align-items-center gap-1">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Order" asp-action="Index"
+                                   title="My Orders">
+                                    <i class="fa-solid fa-receipt me-1"></i>
+                                    <span class="d-lg-none d-xl-inline">My Orders</span>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#"
+                                   role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                   style="color:#dc2626!important;font-weight:600">
+                                    <i class="fa-solid fa-screwdriver-wrench me-1"></i>
+                                    <span class="d-none d-xl-inline">Admin</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                            <i class="fa-solid fa-gauge-high me-2 text-muted"></i>Dashboard
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-area="Admin" asp-controller="Product" asp-action="Index">
+                                            <i class="fa-solid fa-boxes-stacked me-2 text-muted"></i>Products
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                            <i class="fa-solid fa-tags me-2 text-muted"></i>Categories
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-area="Admin" asp-controller="Order" asp-action="Index">
+                                            <i class="fa-solid fa-list-check me-2 text-muted"></i>All Orders
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-icon-btn" asp-area="" asp-controller="Favorite"
+                                   asp-action="Index" title="My Favourites">
+                                    <i class="fa-solid fa-heart text-danger"></i>
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon-btn position-relative" asp-controller="Cart"
+                               asp-action="Index" title="Shopping Cart">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span id="cart-badge"
+                                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
+                                      style="font-size:.6rem; display:none">0</span>
+                            </a>
+                        </li>
+                        @await Html.PartialAsync("_LoginPartial")
+                    </ul>
+
                 </div>
             </div>
         </nav>
     </header>
+
+    <!-- MAIN -->
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-4 page-transition">
             @await Html.PartialAsync("_Notifications")
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- FOOTER -->
+    <footer class="site-footer">
         <div class="container">
-            &copy; 2026 - EComerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row g-4 mb-2">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-2">
+                        <i class="fa-solid fa-bag-shopping me-1"></i>Shop<span class="brand-dot">Zone</span>
+                    </div>
+                    <p class="small mb-3" style="color:#94a3b8">
+                        Your go-to store for quality products at great prices. We deliver premium shopping experiences.
+                    </p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-sm" style="background:rgba(255,255,255,.08);color:#94a3b8;border:1px solid rgba(255,255,255,.1);width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;" title="Facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm" style="background:rgba(255,255,255,.08);color:#94a3b8;border:1px solid rgba(255,255,255,.1);width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;" title="Twitter">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm" style="background:rgba(255,255,255,.08);color:#94a3b8;border:1px solid rgba(255,255,255,.1);width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;" title="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <p class="footer-heading">Shop</p>
+                    <ul class="list-unstyled small mb-0">
+                        <li class="mb-1"><a asp-area="" asp-controller="Catalog" asp-action="Index">All Products</a></li>
+                        <li class="mb-1"><a asp-area="" asp-controller="Catalog" asp-action="Index" asp-route-sort="newest">New Arrivals</a></li>
+                        <li class="mb-1"><a asp-area="" asp-controller="Catalog" asp-action="Index" asp-route-sort="price_asc">Best Deals</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <p class="footer-heading">Support</p>
+                    <ul class="list-unstyled small mb-0">
+                        <li class="mb-1"><a href="#">Help Center</a></li>
+                        <li class="mb-1"><a href="#">Shipping Info</a></li>
+                        <li class="mb-1"><a href="#">Returns</a></li>
+                        <li class="mb-1"><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <p class="footer-heading">Newsletter</p>
+                    <p class="small mb-2" style="color:#94a3b8">Subscribe to get updates on new products and deals.</p>
+                    <div class="newsletter-form">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Enter your email..." />
+                            <button class="btn btn-primary" type="button">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center">
+                <span>&copy; 2026 ShopZone. All rights reserved.</span>
+                <span>Made with <i class="fa-solid fa-heart text-danger mx-1"></i> by the ShopZone team</span>
+            </div>
         </div>
     </footer>
+
+    <!-- Support Modal -->
+    <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="supportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="border-radius:var(--shop-radius)">
+                <div class="modal-header" style="background:linear-gradient(135deg,var(--shop-primary),#3b82f6);color:#fff;border-radius:calc(var(--shop-radius) - 1px) calc(var(--shop-radius) - 1px) 0 0">
+                    <h5 class="modal-title" id="supportModalLabel">
+                        <i class="fa-solid fa-headset me-2"></i>Support
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-3">
+                        <i class="fa-solid fa-envelope fa-2x" style="color:var(--shop-primary)"></i>
+                    </div>
+                    <p class="text-center text-muted">Need help? Reach out to us anytime.</p>
+                    <ul class="list-unstyled">
+                        <li class="d-flex align-items-center gap-2 mb-2">
+                            <i class="fa-solid fa-envelope text-primary"></i>
+                            <span>support&#64;shopzone.com</span>
+                        </li>
+                        <li class="d-flex align-items-center gap-2 mb-2">
+                            <i class="fa-solid fa-phone text-primary"></i>
+                            <span>+1 (800) 123-4567</span>
+                        </li>
+                        <li class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-clock text-primary"></i>
+                            <span>Mon-Fri, 9am - 6pm</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Chat Assistant -->
+    <button class="chat-assistant-fab" id="chatFab" title="Shopping Assistant">
+        <i class="fa-solid fa-comments"></i>
+    </button>
+    <div class="chat-assistant-panel" id="chatPanel">
+        <div class="chat-header">
+            <h6><i class="fa-solid fa-robot me-2"></i>Shopping Assistant</h6>
+            <button class="btn-close-chat" id="chatClose"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-message bot">
+                <div class="chat-bubble">
+                    Hi there! I'm your shopping assistant. How can I help you today?
+                </div>
+            </div>
+            <div class="chat-message bot">
+                <div class="chat-bubble">
+                    You can ask me about products, orders, shipping, or anything else!
+                </div>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" class="form-control" id="chatInput" placeholder="Type a message..." />
+            <button class="btn btn-primary" id="chatSend">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast notification container -->
+    <div id="shopToastContainer" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:11000"></div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-            // Refresh cart badge count on every page using the lightweight /Cart/Count endpoint.
-            (function () {
+        // Refresh cart badge count
+        (function () {
             fetch('/Cart/Count')
-            .then(r => r.json())
-            .then(data => {
-            var badge = document.getElementById('cart-badge');
-            if (!badge) return;
-            if (data.count > 0) {
-            badge.textContent = data.count > 99 ? '99+' : data.count;
-            badge.style.display = '';
-            } else {
-            badge.style.display = 'none';
-            }
-            })
-            .catch(function () { /* silent fail */ });
-            })();
+                .then(r => r.json())
+                .then(function (data) {
+                    var badge = document.getElementById('cart-badge');
+                    if (!badge) return;
+                    if (data.count > 0) {
+                        badge.textContent = data.count > 99 ? '99+' : data.count;
+                        badge.style.display = '';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                })
+                .catch(function () { });
+        })();
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>

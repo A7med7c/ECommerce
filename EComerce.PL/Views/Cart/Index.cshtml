@@ -1,4 +1,4 @@
-﻿@model CartVM
+@model CartVM
 
 @{
     ViewData["Title"] = "Shopping Cart";
@@ -23,12 +23,10 @@
 
 @if (Model.IsEmpty)
 {
-    <div class="text-center py-5">
-        <div class="mb-4" style="font-size:5rem; color:#e2e8f0">
-            <i class="fa-solid fa-cart-shopping"></i>
-        </div>
-        <h4 class="fw-bold mb-2">Your cart is empty</h4>
-        <p class="text-muted mb-4">Looks like you have not added anything yet.</p>
+    <div class="empty-state">
+        <div class="empty-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+        <h4>Your cart is empty</h4>
+        <p>Looks like you have not added anything yet.</p>
         <a asp-controller="Catalog" asp-action="Index" class="btn btn-primary btn-lg">
             <i class="fa-solid fa-shop me-2"></i>Browse Products
         </a>
@@ -64,8 +62,6 @@ else
                                             </div>
                                         </td>
                                         <td class="text-end text-muted">@item.UnitPrice.ToString("C")</td>
-
-                                        <!-- Quantity controls -->
                                         <td class="text-center" style="min-width:160px">
                                             <div class="d-flex align-items-center justify-content-center gap-1">
                                                 <form asp-action="Update" asp-controller="Cart" method="post" class="m-0">
@@ -91,11 +87,9 @@ else
                                             </div>
                                             <div class="text-muted mt-1" style="font-size:.75rem">@item.StockQuantity in stock</div>
                                         </td>
-
                                         <td class="text-end fw-bold" style="color:var(--shop-primary)">
                                             @item.LineTotal.ToString("C")
                                         </td>
-
                                         <td class="text-center pe-3">
                                             <form asp-action="Remove" asp-controller="Cart" method="post">
                                                 @Html.AntiForgeryToken()
@@ -142,7 +136,7 @@ else
                         </li>
                     </ul>
                 </div>
-                <div class="card-footer" style="background:transparent; border-top:1px solid var(--shop-border)">
+                <div class="card-footer" style="background:transparent;border-top:1px solid var(--shop-border)">
                     <a asp-controller="Order" asp-action="Create" class="btn btn-primary w-100 btn-lg">
                         <i class="fa-solid fa-lock me-2"></i>Proceed to Checkout
                     </a>

@@ -74,6 +74,10 @@ namespace ECommerce.PL.Controllers
                 if (!string.IsNullOrEmpty(vm.ReturnUrl) && Url.IsLocalUrl(vm.ReturnUrl))
                     return Redirect(vm.ReturnUrl);
 
+                var user = await _userManager.FindByEmailAsync(vm.Email);
+                if (user is not null && await _userManager.IsInRoleAsync(user, "Admin"))
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+
                 return RedirectToAction("Index", "Home");
             }
 

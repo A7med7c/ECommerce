@@ -1,0 +1,142 @@
+@{
+    ViewData["Title"] = "Admin – Dashboard";
+}
+
+<div class="row g-4">
+
+    <!-- Admin Sidebar -->
+    <div class="col-lg-2 d-none d-lg-block">
+        <div class="admin-sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-screwdriver-wrench me-1"></i> Admin<span class="brand-dot">Panel</span>
+            </div>
+            <ul class="sidebar-nav">
+                <li>
+                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="active">
+                        <i class="fa-solid fa-gauge-high"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="Product" asp-action="Index">
+                        <i class="fa-solid fa-boxes-stacked"></i> Products
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="Category" asp-action="Index">
+                        <i class="fa-solid fa-tags"></i> Categories
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="Order" asp-action="Index">
+                        <i class="fa-solid fa-list-check"></i> Orders
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Store
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-10">
+
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h2 class="mb-0">
+                <i class="fa-solid fa-gauge-high me-2 text-primary"></i>Dashboard
+            </h2>
+            <span class="text-muted small">
+                <i class="fa-solid fa-clock me-1"></i>@DateTime.Now.ToString("dddd, MMMM d, yyyy")
+            </span>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-sm-4">
+                <div class="admin-stat-card">
+                    <div class="stat-icon" style="background:var(--shop-primary-light);color:var(--shop-primary)">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">@ViewBag.TotalProducts</div>
+                        <div class="stat-label">Total Products</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="admin-stat-card">
+                    <div class="stat-icon" style="background:#f0fdf4;color:#059669">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">@ViewBag.TotalOrders</div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="admin-stat-card">
+                    <div class="stat-icon" style="background:#fffbeb;color:#d97706">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">@ViewBag.TotalCategories</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-3">
+            <div class="col-12">
+                <h5 class="mb-3 fw-semibold">
+                    <i class="fa-solid fa-bolt me-2 text-warning"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <a asp-area="Admin" asp-controller="Product" asp-action="Create"
+                       class="card text-decoration-none h-100 border-0 shadow-sm p-3 d-flex flex-row align-items-center gap-3"
+                       style="border-radius:var(--shop-radius);transition:transform .15s;">
+                    <div class="stat-icon"
+                         style="background:var(--shop-primary-light);color:var(--shop-primary);flex-shrink:0">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold text-dark">Add Product</div>
+                        <div class="small text-muted">Create a new product listing</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <a asp-area="Admin" asp-controller="Category" asp-action="Create"
+                       class="card text-decoration-none h-100 border-0 shadow-sm p-3 d-flex flex-row align-items-center gap-3"
+                       style="border-radius:var(--shop-radius);transition:transform .15s;">
+                    <div class="stat-icon" style="background:#fffbeb;color:#d97706;flex-shrink:0">
+                        <i class="fa-solid fa-folder-plus"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold text-dark">Add Category</div>
+                        <div class="small text-muted">Create a new product category</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <a asp-area="Admin" asp-controller="Order" asp-action="Index"
+                       class="card text-decoration-none h-100 border-0 shadow-sm p-3 d-flex flex-row align-items-center gap-3"
+                       style="border-radius:var(--shop-radius);transition:transform .15s;">
+                    <div class="stat-icon" style="background:#f0fdf4;color:#059669;flex-shrink:0">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold text-dark">Manage Orders</div>
+                        <div class="small text-muted">View and update order statuses</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>

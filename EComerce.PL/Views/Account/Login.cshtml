@@ -1,4 +1,4 @@
-﻿@model ECommerce.PL.ViewModels.LoginVM
+@model ECommerce.PL.ViewModels.LoginVM
 
 @{
     ViewData["Title"] = "Sign In";
@@ -9,11 +9,11 @@
 
         <div class="auth-card card">
             <div class="auth-header">
-                <div class="mb-2" style="font-size:2rem">
+                <div class="mb-2" style="font-size:2.5rem">
                     <i class="fa-solid fa-bag-shopping"></i>
                 </div>
                 <h4 class="mb-0 fw-bold">Welcome back</h4>
-                <p class="mb-0 mt-1" style="font-size:.875rem; opacity:.85">Sign in to your account</p>
+                <p class="mb-0 mt-1" style="font-size:.875rem;opacity:.85">Sign in to your ShopZone account</p>
             </div>
             <div class="card-body p-4">
 
@@ -23,14 +23,18 @@
                     <input type="hidden" asp-for="ReturnUrl" />
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Email address</label>
+                        <label asp-for="Email" class="form-label">
+                            <i class="fa-solid fa-envelope me-1 text-muted"></i>Email address
+                        </label>
                         <input asp-for="Email" class="form-control" placeholder="you@example.com"
                                autocomplete="username" />
                         <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label">Password</label>
+                        <label asp-for="Password" class="form-label">
+                            <i class="fa-solid fa-lock me-1 text-muted"></i>Password
+                        </label>
                         <input asp-for="Password" class="form-control" placeholder="Enter your password"
                                autocomplete="current-password" />
                         <span asp-validation-for="Password" class="text-danger small"></span>

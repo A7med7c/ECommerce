@@ -26,6 +26,12 @@ namespace ECommerce.PL.Controllers
         {
             var (success, message) = await _cartService.AddToCartAsync(productId, quantity);
 
+            if (IsAjaxRequest())
+            {
+                int cartCount = await _cartService.GetItemCountAsync();
+                return Json(new { success, message, cartCount });
+            }
+
             if (success)
                 TempData["CartSuccess"] = message;
             else
@@ -89,5 +95,8 @@ namespace ECommerce.PL.Controllers
             int count = await _cartService.GetItemCountAsync();
             return Json(new { count });
         }
+
+        private bool IsAjaxRequest() =>
+            Request.Headers["X-Requested-With"] == "XMLHttpRequest";
     }
 }

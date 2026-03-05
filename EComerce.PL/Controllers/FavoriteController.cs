@@ -29,6 +29,9 @@ namespace ECommerce.PL.Controllers
         {
             var (success, message) = await _favoriteService.AddAsync(CurrentUserId, productId);
 
+            if (IsAjaxRequest())
+                return Json(new { success, message, isFavorite = true });
+
             TempData[success ? "FavSuccess" : "FavError"] = message;
 
             // Redirect back to the page that initiated the request
@@ -46,6 +49,14 @@ namespace ECommerce.PL.Controllers
         {
             bool removed = await _favoriteService.RemoveAsync(CurrentUserId, productId);
 
+            if (IsAjaxRequest())
+                return Json(new
+                {
+                    success = removed,
+                    message = removed ? "Removed from your favourites." : "Item not found in favourites.",
+                    isFavorite = false
+                });
+
             TempData[removed ? "FavSuccess" : "FavError"] =
                 removed ? "Removed from your favourites." : "Item not found in favourites.";
 
@@ -55,5 +66,8 @@ namespace ECommerce.PL.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        private bool IsAjaxRequest() =>
+            Request.Headers["X-Requested-With"] == "XMLHttpRequest";
     }
 }

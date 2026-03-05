@@ -1,4 +1,4 @@
-﻿@model ECommerce.PL.ViewModels.RegisterVM
+@model ECommerce.PL.ViewModels.RegisterVM
 
 @{
     ViewData["Title"] = "Create Account";
@@ -9,11 +9,11 @@
 
         <div class="auth-card card">
             <div class="auth-header success-header">
-                <div class="mb-2" style="font-size:2rem">
+                <div class="mb-2" style="font-size:2.5rem">
                     <i class="fa-solid fa-user-plus"></i>
                 </div>
                 <h4 class="mb-0 fw-bold">Create Account</h4>
-                <p class="mb-0 mt-1" style="font-size:.875rem; opacity:.85">Join ShopZone today</p>
+                <p class="mb-0 mt-1" style="font-size:.875rem;opacity:.85">Join ShopZone today</p>
             </div>
             <div class="card-body p-4">
 
@@ -22,34 +22,42 @@
                 <form asp-action="Register" method="post">
 
                     <div class="mb-3">
-                        <label asp-for="FullName" class="form-label">Full name</label>
+                        <label asp-for="FullName" class="form-label">
+                            <i class="fa-solid fa-user me-1 text-muted"></i>Full name
+                        </label>
                         <input asp-for="FullName" class="form-control" placeholder="Your full name" />
                         <span asp-validation-for="FullName" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Email address</label>
+                        <label asp-for="Email" class="form-label">
+                            <i class="fa-solid fa-envelope me-1 text-muted"></i>Email address
+                        </label>
                         <input asp-for="Email" class="form-control" placeholder="you@example.com"
                                autocomplete="username" />
                         <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label">Password</label>
+                        <label asp-for="Password" class="form-label">
+                            <i class="fa-solid fa-lock me-1 text-muted"></i>Password
+                        </label>
                         <input asp-for="Password" class="form-control" placeholder="Min 8 characters"
                                autocomplete="new-password" />
                         <span asp-validation-for="Password" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-4">
-                        <label asp-for="ConfirmPassword" class="form-label">Confirm password</label>
+                        <label asp-for="ConfirmPassword" class="form-label">
+                            <i class="fa-solid fa-lock me-1 text-muted"></i>Confirm password
+                        </label>
                         <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat your password"
                                autocomplete="new-password" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                     </div>
 
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-lg" style="background:#059669; border-color:#059669; color:#fff">
+                        <button type="submit" class="btn btn-lg" style="background:#059669;border-color:#059669;color:#fff">
                             <i class="fa-solid fa-user-plus me-2"></i>Create Account
                         </button>
                     </div>

@@ -1,0 +1,78 @@
+@using Microsoft.AspNetCore.Identity
+@using ECommerce.DAL.Entities.IdentityModule
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser>   UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var isAdmin     = User.IsInRole("Admin");
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center gap-1"
+           href="#" id="userDropdown" role="button"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--shop-primary-light);color:var(--shop-primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;">
+                @(currentUser?.FullName?.Substring(0, 1).ToUpper() ?? "U")
+            </div>
+            <span class="d-none d-md-inline" style="font-size:.85rem">@(currentUser?.FullName ?? User.Identity!.Name)</span>
+            @if (isAdmin)
+            {
+                <span class="badge bg-danger ms-1" style="font-size:.55rem">Admin</span>
+            }
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            @if (isAdmin)
+            {
+                <li>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                        <i class="fa-solid fa-tags me-2 text-muted"></i>Manage Categories
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                        <i class="fa-solid fa-box me-2 text-muted"></i>Manage Products
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">
+                        <i class="fa-solid fa-list-check me-2 text-muted"></i>Manage Orders
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+            }
+            <li>
+                <a class="dropdown-item" asp-controller="Order" asp-action="Index">
+                    <i class="fa-solid fa-box-open me-2 text-muted"></i>My Orders
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-controller="Favorite" asp-action="Index">
+                    <i class="fa-solid fa-heart me-2 text-muted"></i>My Favourites
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button class="dropdown-item text-danger" type="submit">
+                        <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="btn btn-outline-primary btn-sm me-1" asp-controller="Account" asp-action="Login">
+            <i class="fa-solid fa-right-to-bracket me-1"></i>Login
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Register">
+            <i class="fa-solid fa-user-plus me-1"></i>Register
+        </a>
+    </li>
+}

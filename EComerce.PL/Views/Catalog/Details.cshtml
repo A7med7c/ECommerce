@@ -1,0 +1,163 @@
+@model ProductDetailsVM
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-action="Index"><i class="fa-solid fa-shop me-1"></i>Shop</a>
+        </li>
+        @if (!string.IsNullOrEmpty(Model.CategoryName))
+        {
+            <li class="breadcrumb-item">
+                <a asp-action="Index" asp-route-categoryId="@Model.CategoryId">@Model.CategoryName</a>
+            </li>
+        }
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<!-- Product Detail -->
+<div class="row g-4 g-lg-5">
+
+    <!-- LEFT: Product Image -->
+    <div class="col-lg-5">
+        <div class="sticky-top" style="top:5.5rem">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" alt="@Model.Name" class="product-detail-img" />
+            }
+            else
+            {
+                <div class="product-detail-placeholder">
+                    <i class="fa-solid fa-image fa-5x"></i>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- RIGHT: Product Info -->
+    <div class="col-lg-7">
+
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="cat-badge">@Model.CategoryName</span>
+            <span class="text-muted" style="font-size:.8rem">
+                SKU: <span class="font-monospace">@Model.SKU</span>
+            </span>
+        </div>
+
+        <h1 class="section-title mb-2" style="font-size:1.7rem">@Model.Name</h1>
+
+        <!-- Rating -->
+        <div class="product-rating mb-3" style="font-size:.95rem">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+            <span class="rating-count ms-1">(4.5 / 5)</span>
+        </div>
+
+        <!-- Price -->
+        <p class="mb-3" style="font-size:2rem;font-weight:800;color:var(--shop-primary)">
+            @Model.Price.ToString("C")
+        </p>
+
+        <!-- Stock -->
+        <div class="mb-3">
+            @if (Model.StockQuantity > 0)
+            {
+                <span class="badge px-3 py-2" style="background:#f0fdf4;color:#15803d;font-size:.85rem;font-weight:600;border-radius:8px">
+                    <i class="fa-solid fa-circle-check me-1"></i>
+                    @Model.StockQuantity unit@(Model.StockQuantity == 1 ? "" : "s") in stock
+                </span>
+            }
+            else
+            {
+                <span class="badge px-3 py-2" style="background:#fff1f2;color:#b91c1c;font-size:.85rem;font-weight:600;border-radius:8px">
+                    <i class="fa-solid fa-circle-xmark me-1"></i>Out of stock
+                </span>
+            }
+        </div>
+
+        <!-- Description -->
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div class="mb-4" style="border-left:3px solid var(--shop-primary);padding-left:1rem">
+                <p class="text-muted mb-0" style="line-height:1.7">@Model.Description</p>
+            </div>
+        }
+
+        <hr style="border-color:var(--shop-border)" />
+
+        <!-- Actions -->
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            @if (Model.IsActive && Model.StockQuantity > 0)
+            {
+                <form asp-controller="Cart" asp-action="Add" method="post"
+                      class="d-flex align-items-center gap-2 flex-wrap" data-async="cart">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <div class="input-group" style="max-width:130px">
+                        <span class="input-group-text" style="border-radius:8px 0 0 8px">Qty</span>
+                        <input type="number" name="quantity" value="1"
+                               min="1" max="@Model.StockQuantity"
+                               class="form-control text-center"
+                               style="border-radius:0 8px 8px 0" />
+                    </div>
+                    <button type="submit" class="btn btn-primary px-4 btn-lg">
+                        <i class="fa-solid fa-cart-plus me-2"></i>Add to Cart
+                    </button>
+                </form>
+            }
+            else
+            {
+                <button class="btn btn-secondary btn-lg" disabled>
+                    <i class="fa-solid fa-ban me-2"></i>Unavailable
+                </button>
+            }
+
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                bool isFav = ViewBag.IsFavorite == true;
+                <form asp-controller="Favorite"
+                      asp-action="@(isFav ? "Remove" : "Add")"
+                      method="post" data-async="favorite" data-fav-toggle="true">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <button type="submit"
+                            class="btn btn-lg @(isFav ? "btn-danger" : "btn-outline-danger") px-4"
+                            title="@(isFav ? "Remove from Favourites" : "Add to Favourites")">
+                        <i class="fa-solid fa-heart me-2"></i>
+                        @(isFav ? "Unfavourite" : "Favourite")
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login"
+                   class="btn btn-outline-danger btn-lg px-4">
+                    <i class="fa-solid fa-heart me-2"></i>Login to Favourite
+                </a>
+            }
+        </div>
+
+        <!-- Trust badges -->
+        <div class="d-flex gap-4 mt-4 pt-3" style="border-top:1px solid var(--shop-border)">
+            <div class="d-flex align-items-center gap-2 text-muted small">
+                <i class="fa-solid fa-truck" style="color:var(--shop-primary)"></i>Free Shipping
+            </div>
+            <div class="d-flex align-items-center gap-2 text-muted small">
+                <i class="fa-solid fa-shield-halved" style="color:var(--shop-primary)"></i>Secure Checkout
+            </div>
+            <div class="d-flex align-items-center gap-2 text-muted small">
+                <i class="fa-solid fa-rotate-left" style="color:var(--shop-primary)"></i>Easy Returns
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-arrow-left me-1"></i>Back to Shop
+    </a>
+</div>

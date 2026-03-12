@@ -1,6 +1,6 @@
-namespace ECommerce.BLL.ViewModels.Order
+﻿namespace ECommerce.BLL.ViewModels.Order
 {
-    /// <summary>Lightweight row used by the Order list view.</summary>
+
     public class OrdersVM
     {
         public int Id { get; set; }

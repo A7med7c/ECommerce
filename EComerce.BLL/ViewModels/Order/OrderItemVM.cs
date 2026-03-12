@@ -1,6 +1,6 @@
-namespace ECommerce.BLL.ViewModels.Order
+﻿namespace ECommerce.BLL.ViewModels.Order
 {
-    /// <summary>Single line item embedded inside OrderDetailsVM.</summary>
+
     public class OrderItemVM
     {
         public int Id { get; set; }

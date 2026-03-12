@@ -1,13 +1,13 @@
 ﻿namespace EComerce.DAL.Entities
 {
-    public class BaseEntity // include the common properties 
+    public class BaseEntity
     {
         public int Id { get; set; }
-        public int CreatedBy { get; set; } // user id 
-        public DateTime? CreatedOn { get; set; } // the data of creating the record in the db 
-        public int ModifiedBy { get; set; } // user id 
-        public DateTime? ModifiedOn { get; set; } // the data of modifing the record in the db 
-        public bool IsDeleted { get; set; } // used for soft deleting
+        public int CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public int ModifiedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public bool IsDeleted { get; set; }
 
     }
 }

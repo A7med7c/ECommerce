@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Cart;
 using ECommerce.DAL.Repositories.Interfaces;
@@ -6,18 +6,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace ECommerce.BLL.Services.Classes
 {
-    /// <summary>
-    /// Session-backed shopping cart service.
-    ///
-    /// Storage strategy: the cart is serialized as a JSON array stored under
-    /// a single session key ("Cart").  Only <see cref="AddToCartAsync"/> touches
-    /// the database (to fetch price, stock, and active status).  All other
-    /// operations work purely against the in-session snapshot, keeping DB
-    /// round-trips at the absolute minimum.
-    /// </summary>
+
+
     public class CartService(IUnitOfWork _unitOfWork, IHttpContextAccessor _httpContextAccessor) : ICartService
     {
-        // ── Constants ────────────────────────────────────────────────────────
+
         private const string CartSessionKey = "Cart";
         private ISession Session =>
             _httpContextAccessor.HttpContext?.Session
@@ -25,7 +18,6 @@ namespace ECommerce.BLL.Services.Classes
                 "CartService requires an active HTTP session. " +
                 "Make sure UseSession() is called before the request pipeline.");
 
-        // ── Public API ───────────────────────────────────────────────────────
 
         public Task<CartVM> GetCartAsync()
         {
@@ -39,7 +31,7 @@ namespace ECommerce.BLL.Services.Classes
             if (quantity <= 0)
                 return (false, "Quantity must be greater than zero.");
 
-            // ── Validate product from DB ──────────────────────────────────
+
             var product = await _unitOfWork.Products.GetByIdAsync(productId);
 
             if (product is null)
@@ -51,14 +43,14 @@ namespace ECommerce.BLL.Services.Classes
             if (product.StockQuantity <= 0)
                 return (false, $"'{product.Name}' is out of stock.");
 
-            // ── Update session ────────────────────────────────────────────
+
             var items = ReadSessionItems();
 
             var existing = items.FirstOrDefault(i => i.ProductId == productId);
 
             if (existing is not null)
             {
-                // Prevent duplicate: increment existing line
+
                 int newQty = existing.Quantity + quantity;
 
                 if (newQty > product.StockQuantity)
@@ -67,7 +59,7 @@ namespace ECommerce.BLL.Services.Classes
                         $"You already have {existing.Quantity} in your cart.");
 
                 existing.Quantity = newQty;
-                existing.StockQuantity = product.StockQuantity; // refresh snapshot
+                existing.StockQuantity = product.StockQuantity;
             }
             else
             {
@@ -95,7 +87,7 @@ namespace ECommerce.BLL.Services.Classes
         {
             if (quantity <= 0)
             {
-                // Treat zero/negative as a remove
+
                 var removed = RemoveItem(productId);
                 return Task.FromResult(removed
                     ? (true, "Item removed from cart.")
@@ -132,7 +124,6 @@ namespace ECommerce.BLL.Services.Classes
             return Task.FromResult(count);
         }
 
-        // ── Private helpers ──────────────────────────────────────────────────
 
         private List<CartItemVM> ReadSessionItems()
         {

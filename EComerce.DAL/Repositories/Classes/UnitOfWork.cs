@@ -1,13 +1,11 @@
-using EComerce.DAL.Data.Contexts;
+﻿using EComerce.DAL.Data.Contexts;
 using ECommerce.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ECommerce.DAL.Repositories.Classes
 {
-    /// <summary>
-    /// Concrete Unit of Work. Shares a single ApplicationDbContext across all
-    /// child repositories and exposes Complete() as the single save point.
-    /// </summary>
+
+
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;

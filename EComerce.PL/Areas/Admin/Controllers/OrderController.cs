@@ -1,4 +1,4 @@
-using ECommerce.BLL.Enums;
+﻿using ECommerce.BLL.Enums;
 using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Order;
 using Microsoft.AspNetCore.Authorization;
@@ -10,14 +10,14 @@ namespace ECommerce.PL.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class OrderController(IOrderService _orderService) : Controller
     {
-        // ── GET /Admin/Order ──────────────────────────────────────────────
+
         public async Task<IActionResult> Index()
         {
             var orders = await _orderService.GetAllOrdersAsync();
             return View(orders);
         }
 
-        // ── GET /Admin/Order/Details/5 ────────────────────────────────────
+
         public async Task<IActionResult> Details(int id)
         {
             var order = await _orderService.GetOrderByIdAsync(id);
@@ -25,7 +25,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return View(order);
         }
 
-        // ── GET /Admin/Order/UpdateStatus/5 ──────────────────────────────
+
         public async Task<IActionResult> UpdateStatus(int id)
         {
             var order = await _orderService.GetOrderByIdAsync(id);
@@ -36,12 +36,12 @@ namespace ECommerce.PL.Areas.Admin.Controllers
                 OrderId = order.Id,
                 OrderNumber = order.OrderNumber,
                 CurrentStatus = order.Status,
-                NewStatus = order.StatusValue   // pre-select current numeric value
+                NewStatus = order.StatusValue
             };
             return View(vm);
         }
 
-        // ── POST /Admin/Order/UpdateStatus ────────────────────────────────
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(UpdateOrderStatusVM vm)
         {

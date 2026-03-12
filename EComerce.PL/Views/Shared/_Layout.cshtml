@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,17 +19,17 @@
 </head>
 <body>
 
-    <!-- NAVBAR -->
+    
     <header>
         <nav class="navbar navbar-expand-lg sticky-top">
             <div class="container">
 
-                <!-- Brand -->
+                
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="fa-solid fa-bag-shopping me-1"></i>Shop<span class="brand-dot">Zone</span>
                 </a>
 
-                <!-- Mobile toggle -->
+                
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
                         data-bs-target="#mainNavbar" aria-controls="mainNavbar"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@
 
                 <div class="collapse navbar-collapse" id="mainNavbar">
 
-                    <!-- Left nav links: Home, Products, Categories, Support -->
+                    
                     <ul class="navbar-nav me-3 mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
@@ -46,36 +46,53 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Catalog" asp-action="Index">
-                                <i class="fa-solid fa-shop me-1"></i>Products
-                            </a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="nav-link" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                                    <i class="fa-solid fa-shop me-1"></i>Products
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="nav-link" asp-area="" asp-controller="Catalog" asp-action="Index">
+                                    <i class="fa-solid fa-shop me-1"></i>Products
+                                </a>
+                            }
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="Index">
                                 <i class="fa-solid fa-tags me-1"></i>Categories
                             </a>
-                            <ul class="dropdown-menu">
-                                <li>
+                        }
+                        else
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-tags me-1"></i>Categories
+                                </a>
+                                <ul class="dropdown-menu">
                                     <a class="dropdown-item" asp-area="" asp-controller="Catalog" asp-action="Index">
                                         <i class="fa-solid fa-border-all me-2 text-muted"></i>All Products
                                     </a>
-                                </li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Catalog"
-                                       asp-action="Index" asp-route-sort="newest">
-                                        <i class="fa-solid fa-star me-2 text-warning"></i>New Arrivals
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Catalog"
-                                       asp-action="Index" asp-route-sort="price_asc">
-                                        <i class="fa-solid fa-arrow-trend-down me-2 text-success"></i>Best Deals
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Catalog"
+                                           asp-action="Index" asp-route-sort="newest">
+                                            <i class="fa-solid fa-star me-2 text-warning"></i>New Arrivals
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Catalog"
+                                           asp-action="Index" asp-route-sort="price_asc">
+                                            <i class="fa-solid fa-arrow-trend-down me-2 text-success"></i>Best Deals
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#supportModal">
                                 <i class="fa-solid fa-headset me-1"></i>Support
@@ -83,21 +100,24 @@
                         </li>
                     </ul>
 
-                    <!-- Center: Search bar -->
-                    <form class="navbar-search d-flex flex-grow-1 mx-2"
-                          asp-area="" asp-controller="Catalog" asp-action="Index" method="get">
-                        <div class="input-group">
-                            <input type="search" name="q" class="form-control"
-                                   placeholder="Search products..." aria-label="Search products" />
-                            <button class="btn" type="submit" aria-label="Search">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
-                        </div>
-                    </form>
+                    
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        <form class="navbar-search d-flex flex-grow-1 mx-2"
+                              asp-area="" asp-controller="Catalog" asp-action="Index" method="get">
+                            <div class="input-group">
+                                <input type="search" name="q" class="form-control"
+                                       placeholder="Search products..." aria-label="Search products" />
+                                <button class="btn" type="submit" aria-label="Search">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                        </form>
+                    }
 
-                    <!-- Right icons: My Orders, Admin, Favorites, Cart, User -->
+                    
                     <ul class="navbar-nav ms-2 align-items-center gap-1">
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        @if (User.Identity != null && User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Order" asp-action="Index"
@@ -107,45 +127,7 @@
                                 </a>
                             </li>
                         }
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#"
-                                   role="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                   style="color:#dc2626!important;font-weight:600">
-                                    <i class="fa-solid fa-screwdriver-wrench me-1"></i>
-                                    <span class="d-none d-xl-inline">Admin</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item"
-                                           asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                                            <i class="fa-solid fa-gauge-high me-2 text-muted"></i>Dashboard
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider" /></li>
-                                    <li>
-                                        <a class="dropdown-item"
-                                           asp-area="Admin" asp-controller="Product" asp-action="Index">
-                                            <i class="fa-solid fa-boxes-stacked me-2 text-muted"></i>Products
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item"
-                                           asp-area="Admin" asp-controller="Category" asp-action="Index">
-                                            <i class="fa-solid fa-tags me-2 text-muted"></i>Categories
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item"
-                                           asp-area="Admin" asp-controller="Order" asp-action="Index">
-                                            <i class="fa-solid fa-list-check me-2 text-muted"></i>All Orders
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        @if (User.Identity != null && User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link nav-icon-btn" asp-area="" asp-controller="Favorite"
@@ -154,15 +136,18 @@
                                 </a>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-btn position-relative" asp-controller="Cart"
-                               asp-action="Index" title="Shopping Cart">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                <span id="cart-badge"
-                                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
-                                      style="font-size:.6rem; display:none">0</span>
-                            </a>
-                        </li>
+                        @if (!User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-icon-btn position-relative" asp-controller="Cart"
+                                   asp-action="Index" title="Shopping Cart">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    <span id="cart-badge"
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
+                                          style="font-size:.6rem; display:none">0</span>
+                                </a>
+                            </li>
+                        }
                         @await Html.PartialAsync("_LoginPartial")
                     </ul>
 
@@ -171,7 +156,7 @@
         </nav>
     </header>
 
-    <!-- MAIN -->
+    
     <div class="container">
         <main role="main" class="pb-4 page-transition">
             @await Html.PartialAsync("_Notifications")
@@ -179,7 +164,7 @@
         </main>
     </div>
 
-    <!-- FOOTER -->
+    
     <footer class="site-footer">
         <div class="container">
             <div class="row g-4 mb-2">
@@ -239,7 +224,7 @@
         </div>
     </footer>
 
-    <!-- Support Modal -->
+    
     <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="supportModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="border-radius:var(--shop-radius)">
@@ -273,7 +258,7 @@
         </div>
     </div>
 
-    <!-- Floating Chat Assistant -->
+    
     <button class="chat-assistant-fab" id="chatFab" title="Shopping Assistant">
         <i class="fa-solid fa-comments"></i>
     </button>
@@ -302,7 +287,7 @@
         </div>
     </div>
 
-    <!-- Toast notification container -->
+    
     <div id="shopToastContainer" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:11000"></div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

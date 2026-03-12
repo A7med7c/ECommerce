@@ -1,4 +1,4 @@
-@model ECommerce.BLL.ViewModels.Order.OrderDetailsVM
+﻿@model ECommerce.BLL.ViewModels.Order.OrderDetailsVM
 
 @{
     ViewData["Title"] = $"Order {Model.OrderNumber}";
@@ -24,7 +24,7 @@
 </div>
 
 <div class="row g-4 mb-4">
-    <!-- Status & Date -->
+    
     <div class="col-md-6">
         <div class="card h-100 shadow-sm">
             <div class="card-header fw-semibold">
@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <!-- Shipping Address -->
+    
     <div class="col-md-6">
         <div class="card h-100 shadow-sm">
             <div class="card-header fw-semibold">
@@ -73,7 +73,7 @@
     </div>
 </div>
 
-<!-- Order Items -->
+
 <div class="card shadow-sm">
     <div class="card-header fw-semibold">
         <i class="fa-solid fa-box me-2"></i>Items (@Model.Items.Count())

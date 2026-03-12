@@ -1,20 +1,16 @@
-using ECommerce.BLL.Services.Interfaces;
-using EComerce.PL.Models;
+﻿using ECommerce.BLL.Services.Interfaces;
+using ECommerce.PL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace EComerce.PL.Controllers
 {
     public class HomeController(
-        ILogger<HomeController> logger,
+        ILogger<HomeController> _logger,
         IProductService _productService) : Controller
     {
-        private readonly ILogger<HomeController> _logger = logger;
 
-        /// <summary>
-        /// Home page: identical to the public catalog with
-        /// full search + filter + sort + pagination.
-        /// </summary>
+
         public async Task<IActionResult> Index(
             int? categoryId,
             string? q,

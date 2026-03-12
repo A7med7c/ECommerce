@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.PL.ViewModels
 {
@@ -16,7 +16,7 @@ namespace ECommerce.PL.ViewModels
         [Display(Name = "Phone Number")]
         public string? PhoneNumber { get; set; }
 
-        // Default address fields (flattened for simplicity)
+
         [Display(Name = "Country")]
         public string? Country { get; set; }
 

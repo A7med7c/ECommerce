@@ -1,11 +1,19 @@
-document.addEventListener("DOMContentLoaded", function () {
+﻿document.addEventListener("DOMContentLoaded", function () {
 
-    // ── SweetAlert delete confirmation ──────────────────────────
+
     document.querySelectorAll(".delete-btn").forEach(function (button) {
         button.addEventListener("click", function (e) {
             e.preventDefault();
             var id = this.getAttribute("data-id");
             var msg = this.getAttribute("data-message") || "This record will be permanently deleted!";
+
+            if (typeof Swal === "undefined") {
+                if (window.confirm(msg)) {
+                    document.getElementById("deleteId").value = id;
+                    document.getElementById("deleteForm").submit();
+                }
+                return;
+            }
 
             Swal.fire({
                 title: "Are you sure?",
@@ -26,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ── Floating Chat Assistant ─────────────────────────────────
+
     var chatFab = document.getElementById("chatFab");
     var chatPanel = document.getElementById("chatPanel");
     var chatClose = document.getElementById("chatClose");
@@ -48,13 +56,13 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        // Simple echo behavior for chat UI
+
         function sendMessage() {
             if (!chatInput || !chatBody) return;
             var text = chatInput.value.trim();
             if (!text) return;
 
-            // User message
+
             var userMsg = document.createElement("div");
             userMsg.className = "chat-message user";
             userMsg.innerHTML = '<div class="chat-bubble">' + escapeHtml(text) + '</div>';
@@ -62,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             chatInput.value = "";
 
-            // Bot response
+
             setTimeout(function () {
                 var botMsg = document.createElement("div");
                 botMsg.className = "chat-message bot";
@@ -87,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // ── Async Add to Cart ────────────────────────────────────────
+
     document.addEventListener("submit", function (e) {
         var form = e.target;
         var asyncType = form.getAttribute("data-async");
@@ -157,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!data) return;
             showToast(data.success ? "success" : "info", data.message);
             if (isToggle) {
-                // Details page: toggle full button state and form action
+
                 if (data.isFavorite) {
                     btn.classList.remove("btn-outline-danger");
                     btn.classList.add("btn-danger");
@@ -170,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     form.setAttribute("action", form.getAttribute("action").replace("/Remove", "/Add"));
                 }
             } else {
-                // List pages: visually mark as favourited
+
                 if (data.success) {
                     btn.classList.remove("btn-outline-danger");
                     btn.classList.add("btn-danger");
@@ -217,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
         el.addEventListener("hidden.bs.toast", function () { el.remove(); });
     }
 
-    // ── Auto-dismiss alerts after 5 seconds ─────────────────────
+
     document.querySelectorAll(".alert-dismissible").forEach(function (alert) {
         setTimeout(function () {
             var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
@@ -225,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 5000);
     });
 
-    // ── Active nav link highlighting ────────────────────────────
+
     var currentPath = window.location.pathname.toLowerCase();
     document.querySelectorAll(".navbar-nav .nav-link").forEach(function (link) {
         var href = link.getAttribute("href");
@@ -235,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // ── Helper: escape HTML ─────────────────────────────────────
+
     function escapeHtml(text) {
         var div = document.createElement("div");
         div.appendChild(document.createTextNode(text));

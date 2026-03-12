@@ -1,4 +1,4 @@
-using ECommerce.DAL.Entities;
+﻿using ECommerce.DAL.Entities;
 
 namespace EComerce.DAL.Data.Configurations
 {
@@ -6,11 +6,11 @@ namespace EComerce.DAL.Data.Configurations
        {
               public void Configure(EntityTypeBuilder<Product> builder)
               {
-                     // PK
+
                      builder.HasKey(p => p.Id);
                      builder.Property(p => p.Id).UseIdentityColumn(1, 1);
 
-                     // Properties
+
                      builder.Property(p => p.Name)
                             .HasColumnType("varchar(200)")
                             .IsRequired();
@@ -40,18 +40,18 @@ namespace EComerce.DAL.Data.Configurations
                      builder.Property(p => p.IsActive)
                             .HasDefaultValue(true);
 
-                     // Map BaseEntity.CreatedOn → DB column "CreatedAt" for Product
+
                      builder.Property(p => p.CreatedOn)
                             .HasColumnName("CreatedAt")
                             .HasDefaultValueSql("GETDATE()");
 
-                     // Relationship: Category 1→∞ Product
+
                      builder.HasOne(p => p.Category)
                             .WithMany(c => c.Products)
                             .HasForeignKey(p => p.CategoryId)
                             .OnDelete(DeleteBehavior.Restrict);
 
-                     // Audit columns
+
                      builder.Property(p => p.ModifiedOn).HasDefaultValueSql("GETDATE()");
                      builder.Property(p => p.IsDeleted).HasDefaultValue(false);
               }

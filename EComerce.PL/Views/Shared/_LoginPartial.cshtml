@@ -1,4 +1,4 @@
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @using ECommerce.DAL.Entities.IdentityModule
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser>   UserManager
@@ -22,16 +22,28 @@
             }
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
             @if (isAdmin)
             {
+                
                 <li>
-                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
-                        <i class="fa-solid fa-tags me-2 text-muted"></i>Manage Categories
+                    <h6 class="dropdown-header">
+                        <i class="fa-solid fa-screwdriver-wrench me-1"></i>Admin
+                    </h6>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                        <i class="fa-solid fa-gauge-high me-2 text-muted"></i>Dashboard
                     </a>
                 </li>
                 <li>
                     <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">
-                        <i class="fa-solid fa-box me-2 text-muted"></i>Manage Products
+                        <i class="fa-solid fa-boxes-stacked me-2 text-muted"></i>Manage Products
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                        <i class="fa-solid fa-tags me-2 text-muted"></i>Manage Categories
                     </a>
                 </li>
                 <li>
@@ -41,17 +53,31 @@
                 </li>
                 <li><hr class="dropdown-divider"></li>
             }
+
+            
             <li>
-                <a class="dropdown-item" asp-controller="Order" asp-action="Index">
-                    <i class="fa-solid fa-box-open me-2 text-muted"></i>My Orders
+                <h6 class="dropdown-header">
+                    <i class="fa-solid fa-circle-user me-1"></i>Account
+                </h6>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-controller="Profile" asp-action="Index">
+                    <i class="fa-solid fa-user me-2 text-muted"></i>View Profile
                 </a>
             </li>
             <li>
-                <a class="dropdown-item" asp-controller="Favorite" asp-action="Index">
-                    <i class="fa-solid fa-heart me-2 text-muted"></i>My Favourites
+                <a class="dropdown-item" asp-controller="Profile" asp-action="Edit">
+                    <i class="fa-solid fa-user-pen me-2 text-muted"></i>Edit Profile
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-controller="Profile" asp-action="ChangePassword">
+                    <i class="fa-solid fa-key me-2 text-muted"></i>Change Password
                 </a>
             </li>
             <li><hr class="dropdown-divider"></li>
+
+            
             <li>
                 <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                     @Html.AntiForgeryToken()
@@ -60,6 +86,7 @@
                     </button>
                 </form>
             </li>
+
         </ul>
     </li>
 }

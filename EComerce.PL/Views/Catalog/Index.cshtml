@@ -1,86 +1,52 @@
-@model ProductListVM
+﻿@model ProductListVM
 
 @{
     ViewData["Title"] = "Shop";
 }
 
-<div class="row g-4">
 
-    <!-- LEFT SIDEBAR FILTERS -->
-    <div class="col-lg-3 col-xl-2">
-        <div class="filter-sidebar sticky-top" style="top:5rem">
-            <div class="filter-header">
-                <i class="fa-solid fa-sliders me-2"></i>Filter Products
-            </div>
-            <div class="filter-body">
-                <form asp-action="Index" method="get" id="filterForm">
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
 
-                    <div class="mb-3">
-                        <label class="form-label">Search</label>
-                        <div class="input-group">
-                            <input type="text" name="q" value="@Model.Q" class="form-control"
-                                   placeholder="Name or SKU..." />
-                            <button class="btn btn-outline-secondary" type="submit">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
-                        </div>
-                    </div>
+    <p class="text-muted small mb-0">
+        Showing <strong>@Model.Products.Count</strong> of
+        <strong>@Model.TotalCount</strong> products
+        @if (!string.IsNullOrEmpty(Model.Q))
+        {
+            <span>for &ldquo;<em>@Model.Q</em>&rdquo;</span>
+        }
+    </p>
 
-                    <div class="mb-3">
-                        <label class="form-label">Category</label>
-                        <select name="categoryId" class="form-select" onchange="this.form.submit()"
-                                asp-items="@(new SelectList(Model.Categories, nameof(CategoryFilterVM.Id), nameof(CategoryFilterVM.Name), Model.CategoryId))">
-                            <option value="">All Categories</option>
-                        </select>
-                    </div>
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <a asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-q="@Model.Q" asp-route-sort="newest"
+           class="btn btn-sm @(Model.Sort == "newest" ? "btn-primary" : "btn-outline-secondary")">Newest</a>
+        <a asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-q="@Model.Q" asp-route-sort="price_asc"
+           class="btn btn-sm @(Model.Sort == "price_asc" ? "btn-primary" : "btn-outline-secondary")">Price Low</a>
+        <a asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-q="@Model.Q" asp-route-sort="price_desc"
+           class="btn btn-sm @(Model.Sort == "price_desc" ? "btn-primary" : "btn-outline-secondary")">Price High</a>
 
-                    <div class="mb-3">
-                        <label class="form-label">Sort By</label>
-                        <select name="sort" class="form-select" onchange="this.form.submit()"
-                                asp-items="@(new SelectList(new[]
-                                {
-                                    new { Value = "newest",     Text = "Newest First" },
-                                    new { Value = "price_asc",  Text = "Price: Low - High" },
-                                    new { Value = "price_desc", Text = "Price: High - Low" }
-                                }, "Value", "Text", Model.Sort))">
-                        </select>
-                    </div>
+        <form asp-action="Index" method="get" class="d-inline-flex mb-0">
+            <input type="hidden" name="sort" value="@Model.Sort" />
+            @if (!string.IsNullOrEmpty(Model.Q))
+            {
+                <input type="hidden" name="q" value="@Model.Q" />
+            }
+            <select name="categoryId" class="form-select form-select-sm"
+                    style="width:auto;min-width:140px"
+                    onchange="this.form.submit()"
+                    asp-items="@(new SelectList(Model.Categories, nameof(CategoryFilterVM.Id), nameof(CategoryFilterVM.Name), Model.CategoryId))">
+                <option value="">All Categories</option>
+            </select>
+        </form>
 
-                    @if (!string.IsNullOrEmpty(Model.Q) || Model.CategoryId.HasValue)
-                    {
-                        <a asp-action="Index" class="btn btn-sm btn-outline-danger w-100">
-                            <i class="fa-solid fa-xmark me-1"></i>Clear Filters
-                        </a>
-                    }
-
-                </form>
-            </div>
-        </div>
+        @if (!string.IsNullOrEmpty(Model.Q) || Model.CategoryId.HasValue)
+        {
+            <a asp-action="Index" class="btn btn-sm btn-outline-danger">
+                <i class="fa-solid fa-xmark me-1"></i>Clear
+            </a>
+        }
     </div>
 
-    <!-- RIGHT SIDE - PRODUCTS GRID -->
-    <div class="col-lg-9 col-xl-10">
-
-        <!-- Top bar with sort info -->
-        <div class="d-flex align-items-center justify-content-between mb-3">
-            <p class="text-muted small mb-0">
-                Showing <strong>@Model.Products.Count</strong> of
-                <strong>@Model.TotalCount</strong> products
-                @if (!string.IsNullOrEmpty(Model.Q))
-                {
-                    <span>for &ldquo;<em>@Model.Q</em>&rdquo;</span>
-                }
-            </p>
-            <!-- Sort pills for desktop -->
-            <div class="d-none d-md-flex gap-1">
-                <a asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-q="@Model.Q" asp-route-sort="newest"
-                   class="btn btn-sm @(Model.Sort == "newest" ? "btn-primary" : "btn-outline-secondary")">Newest</a>
-                <a asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-q="@Model.Q" asp-route-sort="price_asc"
-                   class="btn btn-sm @(Model.Sort == "price_asc" ? "btn-primary" : "btn-outline-secondary")">Price Low</a>
-                <a asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-q="@Model.Q" asp-route-sort="price_desc"
-                   class="btn btn-sm @(Model.Sort == "price_desc" ? "btn-primary" : "btn-outline-secondary")">Price High</a>
-            </div>
-        </div>
+</div>
 
         @if (Model.Products.Any())
         {
@@ -152,7 +118,7 @@
                 }
             </div>
 
-            <!-- Pagination -->
+            
             @if (Model.TotalPages > 1)
             {
                 <nav class="mt-4" aria-label="Page navigation">
@@ -197,5 +163,3 @@
                 }
             </div>
         }
-    </div>
-</div>

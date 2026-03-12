@@ -1,17 +1,15 @@
-using ECommerce.BLL.Services.Interfaces;
+﻿using ECommerce.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.PL.Controllers
 {
-    /// <summary>
-    /// Public product catalog.
-    /// No [Authorize] — browsing is open to all visitors.
-    /// </summary>
+
+
     public class CatalogController(
         IProductService _productService,
         IFavoriteService _favoriteService) : Controller
     {
-        // ── GET /Catalog ──────────────────────────────────────────────────
+
         public async Task<IActionResult> Index(
             int? categoryId,
             string? q,
@@ -22,7 +20,7 @@ namespace ECommerce.PL.Controllers
             return View(vm);
         }
 
-        // ── GET /Catalog/Details/5 ────────────────────────────────────────
+
         public async Task<IActionResult> Details(int? id)
         {
             if (!id.HasValue) return BadRequest();
@@ -30,7 +28,7 @@ namespace ECommerce.PL.Controllers
             var product = await _productService.GetProductAsync(id.Value);
             if (product is null) return NotFound();
 
-            // Pass whether the current user has already favourited this product
+
             bool isFav = false;
             if (User.Identity?.IsAuthenticated == true)
             {

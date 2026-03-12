@@ -1,4 +1,4 @@
-using ECommerce.DAL.Entities;
+﻿using ECommerce.DAL.Entities;
 using ECommerce.DAL.Entities.IdentityModule;
 
 namespace EComerce.DAL.Data.Configurations
@@ -7,11 +7,11 @@ namespace EComerce.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Address> builder)
         {
-            // PK
+
             builder.HasKey(a => a.Id);
             builder.Property(a => a.Id).UseIdentityColumn(1, 1);
 
-            // Properties
+
             builder.Property(a => a.Country)
                    .HasColumnType("varchar(100)")
                    .IsRequired();
@@ -33,13 +33,13 @@ namespace EComerce.DAL.Data.Configurations
 
             builder.Property(a => a.UserId).IsRequired();
 
-            // Relationship: Customer 1→∞ Address
+
             builder.HasOne(a => a.ApplicationUser)
                    .WithMany(u => u.Addresses)
                    .HasForeignKey(a => a.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
 
-            // Audit columns
+
             builder.Property(a => a.CreatedOn).HasDefaultValueSql("GETDATE()");
             builder.Property(a => a.ModifiedOn).HasDefaultValueSql("GETDATE()");
             builder.Property(a => a.IsDeleted).HasDefaultValue(false);

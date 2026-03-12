@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using EComerce.DAL.Entities;
 using ECommerce.BLL.ViewModels.Category;
 
@@ -8,7 +8,7 @@ namespace ECommerce.BLL.Mappings
     {
         public CategoryProfile()
         {
-            // ── Entity → ViewModel ────────────────────────────────────────
+
 
             CreateMap<Category, CategoriesVM>()
                 .ForMember(dest => dest.CreatedOn,
@@ -36,7 +36,6 @@ namespace ECommerce.BLL.Mappings
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ParentCategories, opt => opt.Ignore());
 
-            // ── ViewModel → Entity ────────────────────────────────────────
 
             CreateMap<AddCategoryVM, Category>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -49,7 +48,7 @@ namespace ECommerce.BLL.Mappings
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.ModifiedBy, opt => opt.Ignore());
 
-            // Used by UpdateCategory: maps into an existing tracked entity (MapFrom overload)
+
             CreateMap<UpdateCategoryVM, Category>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CategoryId))
                 .ForMember(dest => dest.SubCategories, opt => opt.Ignore())

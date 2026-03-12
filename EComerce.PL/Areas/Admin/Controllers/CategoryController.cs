@@ -1,5 +1,4 @@
-using EComerce.DAL.Entities;
-using ECommerce.BLL.Services.Interfaces;
+﻿using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,16 +9,16 @@ namespace ECommerce.PL.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class CategoryController(
         ICategoryService _categoryService,
-        ILogger<Category> _logger) : Controller
+        ILogger<CategoryController> _logger) : Controller
     {
-        // ── GET /Admin/Category ───────────────────────────────────────────
+
         public async Task<IActionResult> Index()
         {
             var categories = await _categoryService.GetCategoriesAsync();
             return View(categories);
         }
 
-        // ── GET /Admin/Category/Details/5 ─────────────────────────────────
+
         public async Task<IActionResult> Details(int? id)
         {
             if (!id.HasValue) return BadRequest();
@@ -28,14 +27,14 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return View(category);
         }
 
-        // ── GET /Admin/Category/Create ────────────────────────────────────
+
         public async Task<IActionResult> Create()
         {
             var vm = await _categoryService.PrepareCreateVMAsync();
             return View(vm);
         }
 
-        // ── POST /Admin/Category/Create ────────────────────────────────────
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddCategoryVM vm)
@@ -68,7 +67,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return View(vm);
         }
 
-        // ── GET /Admin/Category/Edit/5 ────────────────────────────────────
+
         public async Task<IActionResult> Edit(int id)
         {
             if (id <= 0) return BadRequest();
@@ -77,7 +76,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return View(vm);
         }
 
-        // ── POST /Admin/Category/Edit/5 ───────────────────────────────────
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UpdateCategoryVM vm)
@@ -105,15 +104,24 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ── POST /Admin/Category/Delete ────────────────────────────────────
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Delete(int? id)
+        {
+            if (!id.HasValue) return BadRequest();
+            var category = await _categoryService.GetCategoryAsync(id.Value);
+            if (category is null) return NotFound();
+            return View(category);
+        }
+
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
-                if (!id.HasValue) return BadRequest();
-                bool result = await _categoryService.DeleteCategoryAsync(id.Value);
+                if (id <= 0) return BadRequest();
+                bool result = await _categoryService.DeleteCategoryAsync(id);
 
                 TempData[result ? "SuccessMessage" : "ErrorMessage"] =
                     result ? "Category deleted successfully." : "Category not found.";

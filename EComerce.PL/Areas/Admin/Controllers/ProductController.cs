@@ -1,4 +1,4 @@
-using ECommerce.BLL.Services.Interfaces;
+﻿using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
         IWebHostEnvironment _env,
         ILogger<ProductController> _logger) : Controller
     {
-        // ── GET /Admin/Product ────────────────────────────────────────────
+
         public async Task<IActionResult> Index(
             string? q,
             string sort = "newest",
@@ -25,7 +25,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return View(vm);
         }
 
-        // ── GET /Admin/Product/Details/5 ──────────────────────────────────
+
         public async Task<IActionResult> Details(int? id)
         {
             if (!id.HasValue) return BadRequest();
@@ -34,7 +34,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return View(product);
         }
 
-        // ── GET /Admin/Product/Create ──────────────────────────────────────
+
         public async Task<IActionResult> Create()
         {
             var vm = new ProductCreateUpdateVM { IsActive = true };
@@ -42,7 +42,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return View(vm);
         }
 
-        // ── POST /Admin/Product/Create ─────────────────────────────────────
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateUpdateVM vm)
@@ -77,7 +77,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ── GET /Admin/Product/Edit/5 ──────────────────────────────────────
+
         public async Task<IActionResult> Edit(int id)
         {
             if (id <= 0) return BadRequest();
@@ -101,7 +101,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return View(vm);
         }
 
-        // ── POST /Admin/Product/Edit/5 ─────────────────────────────────────
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute] int id, ProductCreateUpdateVM vm)
@@ -123,7 +123,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
                     await LoadCategoriesAsync(vm);
                     return View(vm);
                 }
-                DeleteImageFile(vm.ImageUrl);  // remove old file
+                DeleteImageFile(vm.ImageUrl);
                 vm.ImageUrl = pathOrError;
             }
 
@@ -139,7 +139,7 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ── POST /Admin/Product/Delete ─────────────────────────────────────
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
@@ -157,7 +157,6 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ── Helpers ────────────────────────────────────────────────────────
 
         private async Task<(bool Ok, string PathOrError)> SaveImageAsync(IFormFile file)
         {
@@ -188,9 +187,14 @@ namespace ECommerce.PL.Areas.Admin.Controllers
             if (string.IsNullOrWhiteSpace(relativeUrl)) return;
             try
             {
-                var localPath = Path.Combine(
-                    _env.WebRootPath,
-                    relativeUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                var localPath = Path.GetFullPath(
+                    Path.Combine(
+                        _env.WebRootPath,
+                        relativeUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar)));
+
+                if (!localPath.StartsWith(_env.WebRootPath, StringComparison.OrdinalIgnoreCase))
+                    return;
+
                 if (System.IO.File.Exists(localPath))
                     System.IO.File.Delete(localPath);
             }

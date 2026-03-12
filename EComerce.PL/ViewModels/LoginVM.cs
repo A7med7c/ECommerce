@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.PL.ViewModels
 {
@@ -16,7 +16,7 @@ namespace ECommerce.PL.ViewModels
         [Display(Name = "Remember me")]
         public bool RememberMe { get; set; }
 
-        /// <summary>Safe return URL after login. Validated server-side via Url.IsLocalUrl().</summary>
+
         public string? ReturnUrl { get; set; }
     }
 }

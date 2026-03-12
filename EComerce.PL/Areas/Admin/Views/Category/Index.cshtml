@@ -30,14 +30,14 @@
                     <td>@category.Name</td>
                     <td>@category.CreatedOn.ToString("dd MMM yyyy")</td>
                     <td class="text-center text-nowrap">
-                        <a asp-area="Admin" asp-action="Details" asp-route-id="@category.Id"            class="btn btn-sm btn-info">
+                        <a asp-area="Admin" asp-action="Details" asp-route-id="@category.Id" class="btn btn-sm btn-info">
                             <i class="fa-solid fa-circle-info"></i>
                         </a>
-                        <a asp-area="Admin" asp-action="Edit" asp-route-id="@category.Id"            class="btn btn-sm btn-warning">
+                        <a asp-area="Admin" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-warning">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </a>
-                        <a href="#" class="btn btn-sm btn-danger delete-btn"             data-id="@category.Id"
-                               data-message="Category &lsquo;@category.Name&rsquo; will be permanently deleted!">
+                        <a asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id"
+                               class="btn btn-sm btn-danger">
                             <i class="fa-solid fa-trash"></i>
                         </a>
                     </td>
@@ -50,8 +50,3 @@ else
 {
     <div class="alert alert-info">No categories found.</div>
 }
-
-<form id="deleteForm" asp-area="Admin" asp-action="Delete" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="id" id="deleteId" />
-</form>

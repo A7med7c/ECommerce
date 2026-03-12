@@ -1,13 +1,10 @@
-using ECommerce.DAL.Entities.IdentityModule;
+﻿using ECommerce.DAL.Entities.IdentityModule;
 using Microsoft.AspNetCore.Identity;
 
 namespace ECommerce.PL.Data
 {
-    /// <summary>
-    /// Seeds the Admin role and a default Admin user on first startup.
-    /// Credentials are read from IConfiguration ("AdminSeed" section)
-    /// so they can be overridden per environment without touching code.
-    /// </summary>
+
+
     public static class DbSeeder
     {
         public static async Task SeedAsync(IServiceProvider services, IConfiguration config)
@@ -20,7 +17,6 @@ namespace ECommerce.PL.Data
             await SeedAdminUserAsync(userManager, config, logger);
         }
 
-        // ── Roles ─────────────────────────────────────────────────────────
 
         private static readonly string[] Roles = { "Admin", "Customer" };
 
@@ -42,7 +38,6 @@ namespace ECommerce.PL.Data
             }
         }
 
-        // ── Admin User ────────────────────────────────────────────────────
 
         private static async Task SeedAdminUserAsync(
             UserManager<ApplicationUser> userManager,
@@ -55,14 +50,14 @@ namespace ECommerce.PL.Data
             var fullName = section["FullName"] ?? "System Administrator";
 
             if (await userManager.FindByEmailAsync(email) is not null)
-                return; // already seeded
+                return;
 
             var admin = new ApplicationUser
             {
                 UserName = email,
                 Email = email,
                 FullName = fullName,
-                EmailConfirmed = true        // skip e-mail confirmation for seed account
+                EmailConfirmed = true
             };
 
             var result = await userManager.CreateAsync(admin, password);

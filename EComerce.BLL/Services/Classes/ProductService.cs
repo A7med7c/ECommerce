@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Product;
 using ECommerce.DAL.Entities;
@@ -9,7 +9,7 @@ namespace ECommerce.BLL.Services.Classes
 {
     public class ProductService(IUnitOfWork _unitOfWork, IMapper _mapper) : IProductService
     {
-        // ── Admin queries ──────────────────────────────────────────────────────
+
 
         public async Task<ProductDetailsVM?> GetProductAsync(int id)
         {
@@ -25,13 +25,13 @@ namespace ECommerce.BLL.Services.Classes
             int pageSize = 15)
         {
             IQueryable<Product> query = _unitOfWork.Products
-                .Query(p => p.Category);     // admin sees ALL products, including inactive
+                .Query(p => p.Category);
 
-            // ── Filter by category ─────────────────────────────────
+
             if (categoryId.HasValue)
                 query = query.Where(p => p.CategoryId == categoryId.Value);
 
-            // ── Search ────────────────────────────────────────────────
+
             if (!string.IsNullOrWhiteSpace(q))
             {
                 string term = q.Trim().ToLower();
@@ -76,7 +76,6 @@ namespace ECommerce.BLL.Services.Classes
             };
         }
 
-        // ── Public catalog ───────────────────────────────────────────────────
 
         public async Task<ProductListVM> GetCatalogAsync(
             int? categoryId,
@@ -85,16 +84,16 @@ namespace ECommerce.BLL.Services.Classes
             int page,
             int pageSize = 12)
         {
-            // Start with IQueryable — nothing goes to the DB yet.
-            IQueryable<Product> query = _unitOfWork.Products
-                .Query(p => p.Category)     // includes Category for CategoryName
-                .Where(p => p.IsActive);    // catalog shows only active products
 
-            // ── Filter by category ─────────────────────────────────
+            IQueryable<Product> query = _unitOfWork.Products
+                .Query(p => p.Category)
+                .Where(p => p.IsActive);
+
+
             if (categoryId.HasValue)
                 query = query.Where(p => p.CategoryId == categoryId.Value);
 
-            // ── Full-text search (name) ────────────────────────────
+
             if (!string.IsNullOrWhiteSpace(q))
             {
                 string term = q.Trim().ToLower();
@@ -103,26 +102,26 @@ namespace ECommerce.BLL.Services.Classes
                     p.SKU.ToLower().Contains(term));
             }
 
-            // ── Count BEFORE paging (single COUNT query) ──────────────
+
             int totalCount = await query.CountAsync();
             int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
             int currentPage = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
 
-            // ── Sort ────────────────────────────────────────────
+
             query = sort switch
             {
                 "price_asc" => query.OrderBy(p => p.Price),
                 "price_desc" => query.OrderByDescending(p => p.Price),
-                _ => query.OrderByDescending(p => p.Id)  // newest
+                _ => query.OrderByDescending(p => p.Id)
             };
 
-            // ── Pagination (Skip/Take stays as SQL) ────────────────
+
             var products = await query
                 .Skip((currentPage - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();             // <─ single DB round-trip
+                .ToListAsync();
 
-            // ── Build categories dropdown ───────────────────────────
+
             var categories = await _unitOfWork.Categories
                 .Query()
                 .Select(c => new CategoryFilterVM { Id = c.Id, Name = c.Name })
@@ -142,7 +141,6 @@ namespace ECommerce.BLL.Services.Classes
             };
         }
 
-        // ── Commands (async) ──────────────────────────────────────────────────
 
         public async Task<(bool Success, string Error)> AddProductAsync(ProductCreateUpdateVM vm)
         {

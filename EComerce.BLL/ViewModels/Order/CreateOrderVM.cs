@@ -1,15 +1,12 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.BLL.ViewModels.Order
 {
-    /// <summary>
-    /// View model for the Checkout / Place Order form.
-    /// Carries the shipping address entered by the user and a read-only
-    /// preview of the cart items (populated by the service, not the user).
-    /// </summary>
+
+
     public class CreateOrderVM
     {
-        // ── Shipping Address (user-entered) ───────────────────────────────
+
 
         [Required(ErrorMessage = "Country is required.")]
         [StringLength(100)]
@@ -28,14 +25,13 @@ namespace ECommerce.BLL.ViewModels.Order
         [Display(Name = "ZIP / Postal Code")]
         public string Zip { get; set; } = string.Empty;
 
-        // ── Cart summary (read-only, set by service) ──────────────────────
 
         public IReadOnlyList<CartPreviewItemVM> CartItems { get; set; } = [];
 
         public decimal Total => CartItems.Sum(i => i.LineTotal);
     }
 
-    /// <summary>Individual cart row shown in the checkout summary.</summary>
+
     public class CartPreviewItemVM
     {
         public string ProductName { get; set; } = null!;

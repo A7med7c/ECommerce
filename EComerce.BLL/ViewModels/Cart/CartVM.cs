@@ -1,9 +1,7 @@
-namespace ECommerce.BLL.ViewModels.Cart
+﻿namespace ECommerce.BLL.ViewModels.Cart
 {
-    /// <summary>
-    /// Full shopping-cart view model passed to the Cart/Index view.
-    /// All aggregates are computed properties — zero extra allocations.
-    /// </summary>
+
+
     public class CartVM
     {
         public IReadOnlyList<CartItemVM> Items { get; init; } = [];

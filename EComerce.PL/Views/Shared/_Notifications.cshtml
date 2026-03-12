@@ -1,7 +1,4 @@
-@* ─── Reusable TempData alert partial ───────────────────────────────────────
-   Usage: @await Html.PartialAsync("_Notifications")
-   Reads well-known TempData keys and renders the appropriate Bootstrap alert.
-   Add new keys below as the project grows (e.g. "OrderSuccess"). *@
+﻿
 
 @if (TempData["CartSuccess"] is string cartOk && !string.IsNullOrEmpty(cartOk))
 {

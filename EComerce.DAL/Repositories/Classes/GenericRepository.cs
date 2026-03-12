@@ -1,20 +1,16 @@
-using EComerce.DAL.Data.Contexts;
+﻿using EComerce.DAL.Data.Contexts;
 using ECommerce.DAL.Repositories.Interfaces;
 using System.Linq.Expressions;
 
 namespace ECommerce.DAL.Repositories.Classes
 {
-    /// <summary>
-    /// Generic EF Core repository.
-    /// All mutation methods (Add/Update/Delete) only stage changes on the
-    /// ChangeTracker. Callers MUST invoke IUnitOfWork.Complete() to persist.
-    /// </summary>
+
+
     public class GenericRepository<TEntity>(ApplicationDbContext _dbContext)
         : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         protected DbSet<TEntity> Table => _dbContext.Set<TEntity>();
 
-        // ── Sync ──────────────────────────────────────────────────────────
 
         public IEnumerable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes)
         {
@@ -42,7 +38,6 @@ namespace ECommerce.DAL.Repositories.Classes
             return query.FirstOrDefault(e => e.Id == id && !e.IsDeleted);
         }
 
-        // ── Async ─────────────────────────────────────────────────────────
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(
             params Expression<Func<TEntity, object>>[] includes)

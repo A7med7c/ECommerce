@@ -10,7 +10,7 @@ namespace ECommerce.BLL.Services.Classes
 {
     public class OrderService(IUnitOfWork _unitOfWork, IMapper _mapper) : IOrderService
     {
-        //  Admin queries 
+
 
         public async Task<IEnumerable<AdminOrdersVM>> GetAllOrdersAsync()
         {
@@ -24,15 +24,6 @@ namespace ECommerce.BLL.Services.Classes
             return order is null ? null : _mapper.Map<OrderDetailsVM>(order);
         }
 
-        //  Customer queries 
-
-        public IEnumerable<OrdersVM> GetOrdersByUserId(string userId)
-        {
-            var orders = _unitOfWork.Orders.GetOrdersByUserId(
-                userId,
-                o => o.ShippingAddress);
-            return _mapper.Map<IEnumerable<OrdersVM>>(orders);
-        }
 
         public async Task<IEnumerable<OrdersVM>> GetOrdersByUserIdAsync(string userId)
         {
@@ -48,7 +39,6 @@ namespace ECommerce.BLL.Services.Classes
             return order is null ? null : _mapper.Map<OrderDetailsVM>(order);
         }
 
-        //  Checkout helpers 
 
         public CreateOrderVM PrepareCheckoutVM(IReadOnlyList<CartItemVM> cartItems)
             => new CreateOrderVM
@@ -64,7 +54,6 @@ namespace ECommerce.BLL.Services.Classes
                     .ToList()
             };
 
-        //  Atomic Checkout 
 
         public async Task<(bool Success, string Error, int OrderId)> PlaceOrderAsync(
             CreateOrderVM vm,
@@ -77,13 +66,13 @@ namespace ECommerce.BLL.Services.Classes
             await using var txn = await _unitOfWork.BeginTransactionAsync();
             try
             {
-                //  1. Load all products in ONE async query (prevent N+1) 
+
                 var productIds = cartItems.Select(i => i.ProductId).ToHashSet();
                 var productsList = await _unitOfWork.Products
                     .FindAsync(p => productIds.Contains(p.Id));
                 var products = productsList.ToDictionary(p => p.Id);
 
-                //  2. Validate stock for every line 
+
                 foreach (var item in cartItems)
                 {
                     if (!products.TryGetValue(item.ProductId, out var product))
@@ -98,7 +87,7 @@ namespace ECommerce.BLL.Services.Classes
                             $"Available: {product.StockQuantity}, requested: {item.Quantity}.", 0);
                 }
 
-                //  3. Persist shipping address 
+
                 var address = new Address
                 {
                     Country = vm.Country,
@@ -110,7 +99,7 @@ namespace ECommerce.BLL.Services.Classes
                 };
                 _unitOfWork.Addresses.Add(address);
 
-                //  4. Build Order (EF resolves FK via navigation) 
+
                 var order = new Order
                 {
                     OrderNumber = $"ORD-{DateTime.UtcNow:yyyyMMddHHmmssfff}",
@@ -121,7 +110,7 @@ namespace ECommerce.BLL.Services.Classes
                     ShippingAddress = address
                 };
 
-                //  5. Build OrderItems 
+
                 order.OrderItems = cartItems.Select(i => new OrderItem
                 {
                     ProductId = i.ProductId,
@@ -132,7 +121,7 @@ namespace ECommerce.BLL.Services.Classes
 
                 _unitOfWork.Orders.Add(order);
 
-                //  6. Decrement stock 
+
                 foreach (var item in cartItems)
                 {
                     var product = products[item.ProductId];
@@ -140,10 +129,10 @@ namespace ECommerce.BLL.Services.Classes
                     _unitOfWork.Products.Update(product);
                 }
 
-                //  7. Single atomic flush 
+
                 await _unitOfWork.CompleteAsync();
 
-                //  8. Commit 
+
                 await txn.CommitAsync();
 
                 return (true, string.Empty, order.Id);
@@ -155,7 +144,6 @@ namespace ECommerce.BLL.Services.Classes
             }
         }
 
-        //  Commands 
 
         public async Task<(bool Success, string Error)> UpdateOrderStatusAsync(
             int orderId, int newStatus)
@@ -184,13 +172,27 @@ namespace ECommerce.BLL.Services.Classes
 
         public async Task<bool> CancelOrderAsync(int id, string userId)
         {
-            // Ownership is enforced  only the owner can cancel their order
+
             var order = await _unitOfWork.Orders.GetOrderWithItemsAsync(id, userId);
             if (order is null) return false;
+
+            if (order.Status == (int)OrderStatus.Cancelled)
+                return false;
 
             order.Status = (int)OrderStatus.Cancelled;
             order.ModifiedOn = DateTime.UtcNow;
             _unitOfWork.Orders.Update(order);
+
+            foreach (var item in order.OrderItems)
+            {
+                var product = await _unitOfWork.Products.GetByIdAsync(item.ProductId);
+                if (product is not null)
+                {
+                    product.StockQuantity += item.Quantity;
+                    _unitOfWork.Products.Update(product);
+                }
+            }
+
             return await _unitOfWork.CompleteAsync() > 0;
         }
     }

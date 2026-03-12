@@ -1,4 +1,4 @@
-using ECommerce.BLL.ViewModels.Product;
+﻿using ECommerce.BLL.ViewModels.Product;
 using FluentValidation;
 
 namespace ECommerce.BLL.Validators

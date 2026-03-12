@@ -1,6 +1,6 @@
-namespace ECommerce.BLL.ViewModels.Favorite
+﻿namespace ECommerce.BLL.ViewModels.Favorite
 {
-    /// <summary>Represents a single item on the My Favourites page.</summary>
+
     public class FavoriteVM
     {
         public int FavoriteId { get; set; }

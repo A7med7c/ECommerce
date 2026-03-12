@@ -1,4 +1,4 @@
-using ECommerce.BLL.ViewModels.Order;
+﻿using ECommerce.BLL.ViewModels.Order;
 using FluentValidation;
 
 namespace ECommerce.BLL.Validators

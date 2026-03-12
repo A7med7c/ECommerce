@@ -1,4 +1,4 @@
-using ECommerce.BLL.Services.Interfaces;
+﻿using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,36 +6,26 @@ using System.Security.Claims;
 
 namespace ECommerce.PL.Controllers
 {
-    /// <summary>
-    /// Customer-facing order controller.
-    /// All actions require an authenticated user.
-    /// Delegates all business logic to IOrderService — no domain logic lives here.
-    /// </summary>
+
+
     [Authorize]
     public class OrderController(
         IOrderService _orderService,
         ICartService _cartService) : Controller
     {
-        // ── Helpers ───────────────────────────────────────────────────────
 
-        /// <summary>Returns the current user's identity string (never null when [Authorize] is active).</summary>
+
         private string CurrentUserId =>
             User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-        // ── GET /Order ────────────────────────────────────────────────────
-        /// <summary>Lists only the orders that belong to the logged-in user.</summary>
+
         public async Task<IActionResult> Index()
         {
             var orders = await _orderService.GetOrdersByUserIdAsync(CurrentUserId);
             return View(orders);
         }
 
-        // ── GET /Order/Details/5 ──────────────────────────────────────────
-        /// <summary>
-        /// Shows full order detail.
-        /// Returns 404 when the order doesn't exist OR belongs to a different user
-        /// (prevents ID-tampering / IDOR).
-        /// </summary>
+
         public async Task<IActionResult> Details(int? id)
         {
             if (!id.HasValue) return BadRequest();
@@ -46,7 +36,7 @@ namespace ECommerce.PL.Controllers
             return View(order);
         }
 
-        // ── GET /Order/Create (Checkout) ──────────────────────────────────
+
         public async Task<IActionResult> Create()
         {
             var cart = await _cartService.GetCartAsync();
@@ -61,14 +51,14 @@ namespace ECommerce.PL.Controllers
             return View(vm);
         }
 
-        // ── POST /Order/Create (Checkout submit) ──────────────────────────
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrderVM vm)
         {
             var cart = await _cartService.GetCartAsync();
 
-            // Re-populate cart preview (not posted back by the form)
+
             vm.CartItems = cart.Items
                 .Select(i => new CartPreviewItemVM
                 {
@@ -98,12 +88,12 @@ namespace ECommerce.PL.Controllers
                 return RedirectToAction(nameof(Details), new { id = orderId });
             }
 
-            // Stock / availability error returned from service
+
             ModelState.AddModelError(string.Empty, error);
             return View(vm);
         }
 
-        // ── POST /Order/Cancel ────────────────────────────────────────────
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancel(int id)

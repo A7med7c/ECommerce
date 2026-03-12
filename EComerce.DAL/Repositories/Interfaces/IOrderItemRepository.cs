@@ -1,4 +1,4 @@
-using ECommerce.DAL.Entities;
+﻿using ECommerce.DAL.Entities;
 
 namespace ECommerce.DAL.Repositories.Interfaces
 {

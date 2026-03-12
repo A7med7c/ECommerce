@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using ECommerce.BLL.ViewModels.Product;
 using ECommerce.DAL.Entities;
 
@@ -8,7 +8,7 @@ namespace ECommerce.BLL.Mappings
     {
         public ProductProfile()
         {
-            // ── Entity → ViewModel ────────────────────────────────────────
+
 
             CreateMap<Product, ProductsVM>()
                 .ForMember(dest => dest.CategoryName,
@@ -18,12 +18,11 @@ namespace ECommerce.BLL.Mappings
                 .ForMember(dest => dest.CategoryName,
                     opt => opt.MapFrom(src => src.Category.Name));
 
-            // Used when pre-populating the edit form
+
             CreateMap<Product, ProductCreateUpdateVM>()
                 .ForMember(dest => dest.Categories, opt => opt.Ignore())
                 .ForMember(dest => dest.ImageFile, opt => opt.Ignore());
 
-            // ── ViewModel → Entity ────────────────────────────────────────
 
             CreateMap<ProductCreateUpdateVM, Product>()
                 .ForMember(dest => dest.Id,

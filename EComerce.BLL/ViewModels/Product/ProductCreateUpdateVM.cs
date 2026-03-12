@@ -25,11 +25,11 @@ namespace ECommerce.BLL.ViewModels.Product
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
-        // Image (only for upload; not mapped to DB directly)
+
         [Display(Name = "Product Image")]
         public IFormFile? ImageFile { get; set; }
 
-        /// <summary>Relative path stored in DB, e.g. /images/products/abc.jpg</summary>
+
         public string? ImageUrl { get; set; }
 
         public IEnumerable<SelectListItem> Categories { get; set; }

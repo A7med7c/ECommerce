@@ -1,4 +1,4 @@
-using ECommerce.DAL.Entities.IdentityModule;
+﻿using ECommerce.DAL.Entities.IdentityModule;
 using ECommerce.PL.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +12,7 @@ namespace ECommerce.PL.Controllers
         SignInManager<ApplicationUser> _signInManager,
         ILogger<AccountController> _logger) : Controller
     {
-        // ── Register ─────────────────────────────────────────────────────
+
 
         [HttpGet]
         public IActionResult Register() => View();
@@ -28,7 +28,7 @@ namespace ECommerce.PL.Controllers
                 UserName = vm.Email,
                 Email = vm.Email,
                 FullName = vm.FullName,
-                EmailConfirmed = true  // skip e-mail verification in this version
+                EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(user, vm.Password);
@@ -38,7 +38,7 @@ namespace ECommerce.PL.Controllers
                 await _userManager.AddToRoleAsync(user, "Customer");
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 _logger.LogInformation("New customer registered: {Email}", vm.Email);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Catalog");
             }
 
             foreach (var error in result.Errors)
@@ -47,7 +47,6 @@ namespace ECommerce.PL.Controllers
             return View(vm);
         }
 
-        // ── Login ─────────────────────────────────────────────────────────
 
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
@@ -78,7 +77,7 @@ namespace ECommerce.PL.Controllers
                 if (user is not null && await _userManager.IsInRoleAsync(user, "Admin"))
                     return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Catalog");
             }
 
             if (result.IsLockedOut)
@@ -93,7 +92,6 @@ namespace ECommerce.PL.Controllers
             return View(vm);
         }
 
-        // ── Logout ────────────────────────────────────────────────────────
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -105,7 +103,6 @@ namespace ECommerce.PL.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // ── Access Denied ─────────────────────────────────────────────────
 
         [HttpGet]
         public IActionResult AccessDenied() => View();

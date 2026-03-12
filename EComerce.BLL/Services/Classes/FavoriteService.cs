@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using ECommerce.BLL.Services.Interfaces;
 using ECommerce.BLL.ViewModels.Favorite;
 using ECommerce.DAL.Entities;
@@ -22,7 +22,7 @@ namespace ECommerce.BLL.Services.Classes
             if (await _unitOfWork.Favorites.ExistsAsync(userId, productId))
                 return (false, "Already in your favourites.");
 
-            // Verify the product actually exists and is active
+
             var product = await _unitOfWork.Products.GetByIdAsync(productId);
             if (product is null || !product.IsActive)
                 return (false, "Product not found or unavailable.");

@@ -10,35 +10,7 @@ namespace ECommerce.DAL.Repositories.Classes
         : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         protected DbSet<TEntity> Table => _dbContext.Set<TEntity>();
-
-
-        public IEnumerable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes)
-        {
-            IQueryable<TEntity> query = Table.Where(e => !e.IsDeleted);
-            foreach (var include in includes)
-                query = query.Include(include);
-            return query.ToList();
-        }
-
-        public IEnumerable<TEntity> Find(
-            Expression<Func<TEntity, bool>> predicate,
-            params Expression<Func<TEntity, object>>[] includes)
-        {
-            IQueryable<TEntity> query = Table.Where(e => !e.IsDeleted).Where(predicate);
-            foreach (var include in includes)
-                query = query.Include(include);
-            return query.ToList();
-        }
-
-        public TEntity? GetById(int id, params Expression<Func<TEntity, object>>[] includes)
-        {
-            IQueryable<TEntity> query = Table;
-            foreach (var include in includes)
-                query = query.Include(include);
-            return query.FirstOrDefault(e => e.Id == id && !e.IsDeleted);
-        }
-
-
+        
         public async Task<IEnumerable<TEntity>> GetAllAsync(
             params Expression<Func<TEntity, object>>[] includes)
         {

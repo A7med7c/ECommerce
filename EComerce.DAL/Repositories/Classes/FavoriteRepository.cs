@@ -14,7 +14,7 @@ namespace ECommerce.DAL.Repositories.Classes
                 .Where(f => f.UserId == userId)
                 .Include(f => f.Product)
                     .ThenInclude(p => p.Category)
-                .OrderByDescending(f => f.CreatedOn)
+                .OrderByDescending(f => f.CreatedAt )
                 .ToListAsync();
 
         public async Task<Favorite?> GetAsync(string userId, int productId)

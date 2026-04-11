@@ -44,7 +44,7 @@ namespace EComerce.DAL.Data.Contexts
             foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
                 if (entry.State == EntityState.Added)
-                    entry.Entity.CreatedOn = DateTime.UtcNow;
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
             }
         }
     }

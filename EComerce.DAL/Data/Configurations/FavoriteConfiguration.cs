@@ -14,7 +14,7 @@ namespace EComerce.DAL.Data.Configurations
 
             builder.HasIndex(f => new { f.UserId, f.ProductId }).IsUnique();
 
-            builder.Property(f => f.CreatedOn)
+            builder.Property(f => f.CreatedAt )
                    .HasDefaultValueSql("GETUTCDATE()");
 
 

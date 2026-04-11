@@ -40,7 +40,7 @@ namespace EComerce.DAL.Data.Configurations
                    .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Property(a => a.CreatedOn).HasDefaultValueSql("GETDATE()");
+            builder.Property(a => a.CreatedAt ).HasDefaultValueSql("GETDATE()");
             builder.Property(a => a.ModifiedOn).HasDefaultValueSql("GETDATE()");
             builder.Property(a => a.IsDeleted).HasDefaultValue(false);
         }

@@ -12,7 +12,7 @@ namespace ECommerce.BLL.Factories
                 Id = category.Id,
                 Name = category.Name,
                 ParentCategoryId = category.ParentCategoryId,
-                CreatedOn = category.CreatedOn.HasValue ? DateOnly.FromDateTime(category.CreatedOn.Value) : default
+                CreatedAt  = category.CreatedAt .HasValue ? DateOnly.FromDateTime(category.CreatedAt .Value) : default
             };
         }
 
@@ -29,7 +29,7 @@ namespace ECommerce.BLL.Factories
                 CreatedBy = category.CreatedBy,
                 IsDeleted = category.IsDeleted,
                 ModifiedBy = category.ModifiedBy,
-                CreatedOn = category.CreatedOn.HasValue ? DateOnly.FromDateTime(category.CreatedOn.Value) : default,
+                CreatedAt  = category.CreatedAt .HasValue ? DateOnly.FromDateTime(category.CreatedAt .Value) : default,
                 ModifiedOn = category.ModifiedOn.HasValue ? DateOnly.FromDateTime(category.ModifiedOn.Value) : default,
             };
         }

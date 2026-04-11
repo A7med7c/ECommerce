@@ -1,5 +1,4 @@
 ﻿using ECommerce.DAL.Entities;
-using ECommerce.DAL.Entities.IdentityModule;
 
 namespace EComerce.DAL.Data.Configurations
 {
@@ -41,7 +40,7 @@ namespace EComerce.DAL.Data.Configurations
                    .OnDelete(DeleteBehavior.Restrict);
 
 
-            builder.Property(o => o.CreatedOn).HasDefaultValueSql("GETDATE()");
+            builder.Property(o => o.CreatedAt).HasDefaultValueSql("GETDATE()");
             builder.Property(o => o.ModifiedOn).HasDefaultValueSql("GETDATE()");
             builder.Property(o => o.IsDeleted).HasDefaultValue(false);
         }

@@ -31,7 +31,7 @@ namespace ECommerce.BLL.Services.Classes
             {
                 UserId = userId,
                 ProductId = productId,
-                CreatedOn = DateTime.UtcNow
+                CreatedAt  = DateTime.UtcNow
             };
 
             await _unitOfWork.Favorites.AddAsync(favorite);

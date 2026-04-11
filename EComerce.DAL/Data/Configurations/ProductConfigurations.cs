@@ -41,7 +41,7 @@ namespace EComerce.DAL.Data.Configurations
                             .HasDefaultValue(true);
 
 
-                     builder.Property(p => p.CreatedOn)
+                     builder.Property(p => p.CreatedAt )
                             .HasColumnName("CreatedAt")
                             .HasDefaultValueSql("GETDATE()");
 

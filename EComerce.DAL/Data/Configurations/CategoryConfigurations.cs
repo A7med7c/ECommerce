@@ -23,7 +23,7 @@
                    .OnDelete(DeleteBehavior.Restrict);
 
 
-            builder.Property(c => c.CreatedOn).HasDefaultValueSql("GETDATE()");
+            builder.Property(c => c.CreatedAt ).HasDefaultValueSql("GETDATE()");
             builder.Property(c => c.ModifiedOn).HasDefaultValueSql("GETDATE()");
             builder.Property(c => c.IsDeleted).HasDefaultValue(false);
         }

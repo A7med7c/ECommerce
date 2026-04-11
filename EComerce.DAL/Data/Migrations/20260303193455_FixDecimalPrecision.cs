@@ -20,7 +20,7 @@ namespace ECommerce.DAL.Data.Migrations
                 table: "Products");
 
             migrationBuilder.RenameColumn(
-                name: "CreatedOn",
+                name: "CreatedAt ",
                 table: "Products",
                 newName: "CreatedAt");
 
@@ -107,7 +107,7 @@ namespace ECommerce.DAL.Data.Migrations
                 oldType: "bit");
 
             migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedOn",
+                name: "CreatedAt ",
                 table: "OrderItems",
                 type: "datetime2",
                 nullable: true,
@@ -167,7 +167,7 @@ namespace ECommerce.DAL.Data.Migrations
             migrationBuilder.RenameColumn(
                 name: "CreatedAt",
                 table: "Products",
-                newName: "CreatedOn");
+                newName: "CreatedAt ");
 
             migrationBuilder.AlterColumn<int>(
                 name: "StockQuantity",
@@ -223,7 +223,7 @@ namespace ECommerce.DAL.Data.Migrations
                 oldDefaultValue: true);
 
             migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedOn",
+                name: "CreatedAt ",
                 table: "Products",
                 type: "datetime2",
                 nullable: true,
@@ -252,7 +252,7 @@ namespace ECommerce.DAL.Data.Migrations
                 oldDefaultValue: false);
 
             migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedOn",
+                name: "CreatedAt ",
                 table: "OrderItems",
                 type: "datetime2",
                 nullable: true,

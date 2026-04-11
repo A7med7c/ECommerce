@@ -148,7 +148,7 @@ namespace ECommerce.BLL.Services.Classes
                 return (false, $"SKU '{vm.SKU}' is already in use.");
 
             var product = _mapper.Map<Product>(vm);
-            product.CreatedOn = DateTime.UtcNow;
+            product.CreatedAt  = DateTime.UtcNow;
 
             await _unitOfWork.Products.AddAsync(product);
             await _unitOfWork.CompleteAsync();

@@ -13,7 +13,7 @@ namespace ECommerce.DAL.Entities
 
         public int ProductId { get; set; }
 
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt  { get; set; } = DateTime.UtcNow;
 
 
         public ApplicationUser User { get; set; } = null!;

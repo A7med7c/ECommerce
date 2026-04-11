@@ -30,7 +30,7 @@ namespace ECommerce.BLL.Mappings
                 .ForMember(dest => dest.Category, opt => opt.Ignore())
                 .ForMember(dest => dest.OrderItems, opt => opt.Ignore())
                 .ForMember(dest => dest.Favorites, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedOn, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt , opt => opt.Ignore())
                 .ForMember(dest => dest.ModifiedOn, opt => opt.Ignore())
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())

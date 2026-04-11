@@ -11,20 +11,20 @@ namespace ECommerce.BLL.Mappings
 
 
             CreateMap<Category, CategoriesVM>()
-                .ForMember(dest => dest.CreatedOn,
+                .ForMember(dest => dest.CreatedAt ,
                     opt => opt.MapFrom(src =>
-                        src.CreatedOn.HasValue
-                            ? DateOnly.FromDateTime(src.CreatedOn.Value)
+                        src.CreatedAt .HasValue
+                            ? DateOnly.FromDateTime(src.CreatedAt .Value)
                             : default));
 
             CreateMap<Category, CategoryDetailsVM>()
                 .ForMember(dest => dest.ParentCategoryName,
                     opt => opt.MapFrom(src =>
                         src.ParentCategory != null ? src.ParentCategory.Name : null))
-                .ForMember(dest => dest.CreatedOn,
+                .ForMember(dest => dest.CreatedAt ,
                     opt => opt.MapFrom(src =>
-                        src.CreatedOn.HasValue
-                            ? DateOnly.FromDateTime(src.CreatedOn.Value)
+                        src.CreatedAt .HasValue
+                            ? DateOnly.FromDateTime(src.CreatedAt .Value)
                             : default))
                 .ForMember(dest => dest.ModifiedOn,
                     opt => opt.MapFrom(src =>
@@ -42,7 +42,7 @@ namespace ECommerce.BLL.Mappings
                 .ForMember(dest => dest.SubCategories, opt => opt.Ignore())
                 .ForMember(dest => dest.Products, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentCategory, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedOn, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt , opt => opt.Ignore())
                 .ForMember(dest => dest.ModifiedOn, opt => opt.Ignore())
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
@@ -54,7 +54,7 @@ namespace ECommerce.BLL.Mappings
                 .ForMember(dest => dest.SubCategories, opt => opt.Ignore())
                 .ForMember(dest => dest.Products, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentCategory, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedOn, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt , opt => opt.Ignore())
                 .ForMember(dest => dest.ModifiedOn, opt => opt.Ignore())
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())

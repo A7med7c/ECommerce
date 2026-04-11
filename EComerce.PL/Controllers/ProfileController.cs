@@ -71,7 +71,7 @@ namespace ECommerce.PL.Controllers
                     {
                         UserId = user.Id,
                         IsDefault = true,
-                        CreatedOn = DateTime.UtcNow
+                        CreatedAt  = DateTime.UtcNow
                     };
                     user.Addresses.Add(defaultAddress);
                 }

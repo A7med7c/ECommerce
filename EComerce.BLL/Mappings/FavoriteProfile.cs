@@ -17,7 +17,7 @@ namespace ECommerce.BLL.Mappings
                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.Product.IsActive))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src =>
                     src.Product.Category != null ? src.Product.Category.Name : string.Empty))
-                .ForMember(dest => dest.AddedOn, opt => opt.MapFrom(src => src.CreatedOn));
+                .ForMember(dest => dest.AddedOn, opt => opt.MapFrom(src => src.CreatedAt ));
         }
     }
 }
